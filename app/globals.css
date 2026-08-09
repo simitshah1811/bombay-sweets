@@ -1,0 +1,69 @@
+@import "tailwindcss";
+
+:root {
+  /* Bombay Sweets palette — adapted from the GRAZA editorial system */
+  --color-cream: #fbf3e6; /* warm ivory canvas */
+  --color-ink: #3b2a1d; /* warm coffee-brown text, never pure black */
+  --color-peach: #f3e2c9; /* secondary surface / alternating bands */
+  --color-saffron: #e38a1d; /* primary accent — everyday CTAs */
+  --color-maroon: #8a2332; /* secondary accent — full-bleed editorial bands */
+  --color-green: #6e7a4c; /* tertiary accent, muted, rare */
+
+  --background: var(--color-cream);
+  --foreground: var(--color-ink);
+
+  /* Shape */
+  --radius-pill: 9999px;
+  --radius-image: 20px;
+  --radius-control: 10px;
+
+  /* Motion */
+  --ease-editorial: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-fast: 200ms;
+  --duration-base: 500ms;
+  --duration-slow: 900ms;
+}
+
+@theme inline {
+  --color-cream: var(--color-cream);
+  --color-ink: var(--color-ink);
+  --color-peach: var(--color-peach);
+  --color-saffron: var(--color-saffron);
+  --color-maroon: var(--color-maroon);
+  --color-green: var(--color-green);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --font-display: var(--font-display);
+  --font-body: var(--font-body);
+  --font-label: var(--font-label);
+
+  --radius-pill: var(--radius-pill);
+  --radius-image: var(--radius-image);
+  --radius-control: var(--radius-control);
+}
+
+/* Light-themed only — no dark mode variant by design */
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-body), ui-serif, Georgia, serif;
+}
+
+::selection {
+  background: var(--color-saffron);
+  color: var(--color-cream);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
