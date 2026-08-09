@@ -3,11 +3,12 @@ import { Eyebrow } from "@/components/ui/Eyebrow";
 import { PillButton } from "@/components/ui/PillButton";
 import { NAV_LINKS, CRAVING_HREF } from "@/lib/navigation";
 import { business } from "@/data/business";
+import { Reveal } from "@/components/motion/Reveal";
 
 export function SiteFooter() {
   return (
     <footer className="bg-ink text-cream">
-      <div className="mx-auto grid max-w-[1600px] gap-12 px-6 py-16 lg:grid-cols-[1.2fr_1fr_1fr] lg:px-10 lg:py-24">
+      <Reveal y={0} className="mx-auto grid max-w-[1600px] gap-12 px-6 py-16 lg:grid-cols-[1.2fr_1fr_1fr] lg:px-10 lg:py-24">
         <div className="flex flex-col gap-5">
           <span className="font-display text-4xl">Bombay Sweets</span>
           <p className="max-w-sm font-body text-cream/70">{business.tagline}</p>
@@ -52,7 +53,7 @@ export function SiteFooter() {
             ))}
           </div>
         </div>
-      </div>
+      </Reveal>
 
       <div className="border-t border-cream/15 px-6 py-6 lg:px-10">
         <p className="font-body text-xs text-cream/50">

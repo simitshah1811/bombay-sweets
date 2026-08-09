@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Eyebrow } from "@/components/ui/Eyebrow";
+import { Reveal } from "@/components/motion/Reveal";
 
 const FEATURED_CATEGORIES = [
   { id: "sweets", name: "Sweets" },
@@ -15,12 +16,14 @@ const FEATURED_CATEGORIES = [
 export function CategoryDiscoveryBand() {
   return (
     <section className="bg-peach px-6 py-20 lg:px-10 lg:py-28">
-      <Eyebrow>06 — Browse by Craving</Eyebrow>
-      <h2 className="mt-4 max-w-lg font-display text-[40px] leading-[0.95] text-ink lg:text-[56px]">
-        Where do you want to start?
-      </h2>
+      <Reveal>
+        <Eyebrow>06 — Browse by Craving</Eyebrow>
+        <h2 className="mt-4 max-w-lg font-display text-[40px] leading-[0.95] text-ink lg:text-[56px]">
+          Where do you want to start?
+        </h2>
+      </Reveal>
 
-      <div className="mt-12 grid grid-cols-2 border-t border-ink/15 lg:grid-cols-4">
+      <Reveal delay={0.1} className="mt-12 grid grid-cols-2 border-t border-ink/15 lg:grid-cols-4">
         {FEATURED_CATEGORIES.map((category) => (
           <Link
             key={category.id}
@@ -35,7 +38,7 @@ export function CategoryDiscoveryBand() {
             </span>
           </Link>
         ))}
-      </div>
+      </Reveal>
     </section>
   );
 }

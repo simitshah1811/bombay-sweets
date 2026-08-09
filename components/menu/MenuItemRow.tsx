@@ -9,7 +9,7 @@ export function MenuItemRow({ item }: { item: MenuItem }) {
   return (
     <div
       id={item.id}
-      className="flex items-start justify-between gap-6 border-b border-ink/10 py-5 first:pt-0 last:border-b-0"
+      className="-mx-3 flex items-start justify-between gap-6 rounded-control border-b border-ink/10 px-3 py-5 transition-colors duration-200 first:pt-0 last:border-b-0 hover:bg-peach/50"
     >
       <div className="flex flex-1 flex-col gap-1.5">
         <div className="flex items-center gap-2.5">

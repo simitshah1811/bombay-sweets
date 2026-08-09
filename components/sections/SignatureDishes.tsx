@@ -3,6 +3,8 @@ import Link from "next/link";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { getMenuItem } from "@/data/menu";
 import { formatPrice } from "@/lib/utils/formatPrice";
+import { Reveal } from "@/components/motion/Reveal";
+import { HorizontalScroller } from "@/components/motion/HorizontalScroller";
 
 const SIGNATURE_DISHES = [
   {
@@ -40,14 +42,14 @@ const SIGNATURE_DISHES = [
 export function SignatureDishes() {
   return (
     <section className="py-20 lg:py-28">
-      <div className="px-6 lg:px-10">
+      <Reveal className="px-6 lg:px-10">
         <Eyebrow>03 — Signature Dishes</Eyebrow>
         <h2 className="mt-4 max-w-lg font-display text-[44px] leading-[0.95] text-ink lg:text-[64px]">
           A few favourites
         </h2>
-      </div>
+      </Reveal>
 
-      <div className="mt-12 flex gap-5 overflow-x-auto px-6 pb-4 lg:px-10 [scrollbar-width:none]">
+      <HorizontalScroller count={SIGNATURE_DISHES.length} className="mt-12">
         {SIGNATURE_DISHES.map(({ itemId, image, alt }) => {
           const item = getMenuItem(itemId);
           if (!item) return null;
@@ -55,7 +57,7 @@ export function SignatureDishes() {
             <Link
               key={itemId}
               href={`/menu#${itemId}`}
-              className="group flex w-[260px] shrink-0 flex-col gap-4 lg:w-[320px]"
+              className="group flex w-[260px] shrink-0 snap-start flex-col gap-4 lg:w-[320px]"
             >
               <div className="relative aspect-[4/5] w-full overflow-hidden rounded-image bg-peach">
                 <Image
@@ -73,7 +75,7 @@ export function SignatureDishes() {
             </Link>
           );
         })}
-      </div>
+      </HorizontalScroller>
     </section>
   );
 }

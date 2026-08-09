@@ -1,11 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Eyebrow } from "@/components/ui/Eyebrow";
+import { Reveal } from "@/components/motion/Reveal";
 
 export function MenuExploreBand() {
   return (
     <section className="grid gap-10 px-6 py-20 lg:grid-cols-2 lg:items-center lg:gap-16 lg:px-10 lg:py-28">
-      <div className="order-2 flex flex-col items-start gap-5 lg:order-1">
+      <Reveal className="order-2 flex flex-col items-start gap-5 lg:order-1">
         <Eyebrow>04 — Full Menu</Eyebrow>
         <h2 className="font-display text-[40px] leading-[0.95] text-ink lg:text-[56px]">
           Fifteen kinds of craving, one menu
@@ -20,16 +21,18 @@ export function MenuExploreBand() {
         >
           Browse the full menu →
         </Link>
-      </div>
-      <div className="relative order-1 aspect-[4/3] w-full overflow-hidden rounded-image bg-peach lg:order-2">
-        <Image
-          src="/images/heritage/thali-spread.jpg"
-          alt="A spread of copper kadai bowls with rice and curries"
-          fill
-          sizes="(min-width: 1024px) 50vw, 100vw"
-          className="object-cover"
-        />
-      </div>
+      </Reveal>
+      <Reveal delay={0.1} className="order-1 lg:order-2">
+        <div className="relative aspect-[4/3] w-full overflow-hidden rounded-image bg-peach">
+          <Image
+            src="/images/heritage/thali-spread.jpg"
+            alt="A spread of copper kadai bowls with rice and curries"
+            fill
+            sizes="(min-width: 1024px) 50vw, 100vw"
+            className="object-cover"
+          />
+        </div>
+      </Reveal>
     </section>
   );
 }

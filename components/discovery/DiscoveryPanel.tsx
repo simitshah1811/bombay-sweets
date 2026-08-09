@@ -1,19 +1,25 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { AnimatePresence, motion } from "motion/react";
 import { IntentChips } from "@/components/discovery/IntentChips";
 import { FreeTextInput } from "@/components/discovery/FreeTextInput";
 import { ResultCard } from "@/components/discovery/ResultCard";
+import { CountUp } from "@/components/motion/CountUp";
 import { runDiscovery } from "@/lib/discovery/score";
 import type { ChipId } from "@/lib/discovery/chips";
-import { cn } from "@/lib/utils/cn";
+
+const EASE = [0.16, 1, 0.3, 1] as const;
+const fadeUp = {
+  hidden: { opacity: 0, y: 10 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: EASE } },
+};
 
 export function DiscoveryPanel() {
   const [activeChips, setActiveChips] = useState<ChipId[]>([]);
   const [freeText, setFreeText] = useState("");
   const [debouncedText, setDebouncedText] = useState("");
   const [surpriseNonce, setSurpriseNonce] = useState(0);
-  const [resultsRevealed, setResultsRevealed] = useState(false);
 
   useEffect(() => {
     const id = setTimeout(() => setDebouncedText(freeText), 250);
@@ -30,14 +36,6 @@ export function DiscoveryPanel() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeChipsKey, debouncedText, surpriseNonce, hasQuery]);
 
-  useEffect(() => {
-    if (!outcome) return;
-    const id = setTimeout(() => setResultsRevealed(true), 400);
-    return () => clearTimeout(id);
-  }, [outcome]);
-
-  const showResults = outcome !== null && resultsRevealed;
-
   function toggleChip(id: ChipId) {
     if (id === "SURPRISE_ME") {
       setActiveChips((prev) => (prev.includes("SURPRISE_ME") ? prev : ["SURPRISE_ME"]));
@@ -52,6 +50,10 @@ export function DiscoveryPanel() {
     });
   }
 
+  const resultKey = outcome
+    ? `${outcome.ackLine}|${outcome.results.map((r) => r.item.id).join(",")}`
+    : "empty";
+
   return (
     <div className="mt-10 flex flex-col items-center gap-8">
       <IntentChips active={activeChips} onToggle={toggleChip} />
@@ -60,33 +62,45 @@ export function DiscoveryPanel() {
         <FreeTextInput value={freeText} onChange={setFreeText} />
       </div>
 
-      {outcome && (
-        <div className="w-full">
-          <p className="font-display text-2xl text-ink lg:text-3xl">{outcome.ackLine}</p>
+      <AnimatePresence mode="wait">
+        {outcome && (
+          <motion.div
+            key={resultKey}
+            initial="hidden"
+            animate="visible"
+            exit={{ opacity: 0, transition: { duration: 0.2 } }}
+            variants={{ visible: { transition: { staggerChildren: 0.08 } } }}
+            className="w-full"
+          >
+            <motion.p variants={fadeUp} className="font-display text-2xl text-ink lg:text-3xl">
+              {outcome.ackLine}
+            </motion.p>
 
-          {outcome.results.length === 0 ? (
-            <p className="mt-4 font-body text-ink/60">
-              Nothing quite matched that combination — try a different chip or word.
-            </p>
-          ) : (
-            <>
-              <p className="mt-2 font-label text-xs uppercase tracking-[0.15em] text-ink/50">
-                {outcome.results.length} dish{outcome.results.length !== 1 ? "es" : ""} found
-              </p>
-              <div
-                className={cn(
-                  "mt-6 grid grid-cols-1 gap-5 text-left transition-opacity duration-500 sm:grid-cols-2 lg:grid-cols-4",
-                  showResults ? "opacity-100" : "opacity-0"
-                )}
-              >
-                {outcome.results.map((result) => (
-                  <ResultCard key={result.item.id} result={result} />
-                ))}
-              </div>
-            </>
-          )}
-        </div>
-      )}
+            {outcome.results.length === 0 ? (
+              <motion.p variants={fadeUp} className="mt-4 font-body text-ink/60">
+                Nothing quite matched that combination — try a different chip or word.
+              </motion.p>
+            ) : (
+              <>
+                <motion.p
+                  variants={fadeUp}
+                  className="mt-2 font-label text-xs uppercase tracking-[0.15em] text-ink/50"
+                >
+                  <CountUp value={outcome.results.length} /> dish
+                  {outcome.results.length !== 1 ? "es" : ""} found
+                </motion.p>
+                <div className="mt-6 grid grid-cols-1 gap-5 text-left sm:grid-cols-2 lg:grid-cols-4">
+                  {outcome.results.map((result) => (
+                    <motion.div key={result.item.id} variants={fadeUp}>
+                      <ResultCard result={result} />
+                    </motion.div>
+                  ))}
+                </div>
+              </>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

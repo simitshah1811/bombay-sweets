@@ -1,11 +1,13 @@
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { PillButton } from "@/components/ui/PillButton";
 import { business } from "@/data/business";
+import { Reveal } from "@/components/motion/Reveal";
+import { MagneticButton } from "@/components/motion/MagneticButton";
 
 export function LocationHoursBand() {
   return (
     <section id="visit" className="scroll-mt-24 grid gap-10 px-6 py-20 lg:grid-cols-2 lg:gap-16 lg:px-10 lg:py-28">
-      <div className="flex flex-col justify-center gap-6">
+      <Reveal className="flex flex-col justify-center gap-6">
         <Eyebrow>08 — Visit</Eyebrow>
         <h2 className="font-display text-[40px] leading-[0.95] text-ink lg:text-[56px]">Find us</h2>
 
@@ -33,19 +35,19 @@ export function LocationHoursBand() {
           </a>
         </div>
 
-        <PillButton href={business.mapsHref} className="mt-2 w-fit">
-          Get directions
-        </PillButton>
-      </div>
+        <MagneticButton className="mt-2 w-fit">
+          <PillButton href={business.mapsHref}>Get directions</PillButton>
+        </MagneticButton>
+      </Reveal>
 
-      <div className="aspect-[4/3] w-full overflow-hidden rounded-image lg:aspect-auto">
+      <Reveal delay={0.1} className="aspect-[4/3] w-full overflow-hidden rounded-image lg:aspect-auto">
         <iframe
           title="Bombay Sweets location map"
           src={`https://maps.google.com/maps?q=${encodeURIComponent(business.addressLine)}&z=15&output=embed`}
           className="h-full min-h-[360px] w-full border-0 grayscale-[15%]"
           loading="lazy"
         />
-      </div>
+      </Reveal>
     </section>
   );
 }
