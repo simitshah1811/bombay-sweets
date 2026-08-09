@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
+  <rect width="800" height="600" fill="#F3E2C9" />
+  <circle cx="400" cy="300" r="120" fill="none" stroke="#3B2A1D" stroke-opacity="0.15" stroke-width="1.5" />
+  <text x="400" y="308" text-anchor="middle" font-family="Georgia, serif" font-size="22" fill="#3B2A1D" fill-opacity="0.45">Bombay Sweets</text>
+</svg>
