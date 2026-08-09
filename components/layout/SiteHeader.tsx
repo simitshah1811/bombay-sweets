@@ -56,7 +56,7 @@ export function SiteHeader() {
           type="button"
           onClick={() => setMobileOpen(true)}
           aria-label="Open menu"
-          className="flex items-center gap-2 rounded-pill border border-ink/30 px-4 py-2.5 lg:hidden"
+          className="flex min-h-11 items-center gap-2 rounded-pill border border-ink/30 px-4 py-3 lg:hidden"
         >
           <span className="font-body text-sm text-ink">Menu</span>
         </button>

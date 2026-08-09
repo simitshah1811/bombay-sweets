@@ -3,12 +3,30 @@ import { fraunces, lora, inter } from "@/lib/fonts";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { MotionProvider } from "@/components/motion/MotionProvider";
+import { business } from "@/data/business";
 import "./globals.css";
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+const TITLE = "Bombay Sweets — Port Coquitlam";
+const DESCRIPTION =
+  "Indian sweets, chaat, tandoori and North Indian specialties in Port Coquitlam, BC. Real recipes, made fresh daily.";
+
 export const metadata: Metadata = {
-  title: "Bombay Sweets — Port Coquitlam",
-  description:
-    "Indian sweets, chaat, tandoori and North Indian specialties in Port Coquitlam, BC. Real recipes, made fresh daily.",
+  metadataBase: new URL(SITE_URL),
+  title: { default: TITLE, template: "%s · Bombay Sweets" },
+  description: DESCRIPTION,
+  openGraph: {
+    title: TITLE,
+    description: DESCRIPTION,
+    siteName: business.name,
+    locale: "en_CA",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: TITLE,
+    description: DESCRIPTION,
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

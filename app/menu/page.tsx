@@ -5,7 +5,7 @@ import { MenuCategorySection } from "@/components/menu/MenuCategorySection";
 import { MENU_CATEGORIES } from "@/data/menu";
 
 export const metadata: Metadata = {
-  title: "Menu — Bombay Sweets",
+  title: "Menu",
   description: "The full Bombay Sweets menu: sweets, chaat, tandoori, curries, breads and more.",
 };
 

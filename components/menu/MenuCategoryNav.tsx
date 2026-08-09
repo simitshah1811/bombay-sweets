@@ -12,7 +12,7 @@ export function MenuCategoryNav() {
           <Link
             key={category.id}
             href={`#${category.id}`}
-            className="whitespace-nowrap rounded-pill border border-ink/20 px-4 py-2 font-body text-sm text-ink/80 transition-colors hover:border-ink hover:text-ink"
+            className="flex min-h-10 items-center whitespace-nowrap rounded-pill border border-ink/20 px-4 py-2 font-body text-sm text-ink/80 transition-colors hover:border-ink hover:text-ink"
           >
             {category.name}
           </Link>

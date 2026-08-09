@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 
 export const metadata: Metadata = {
-  title: "Our Story — Bombay Sweets",
+  title: "Our Story",
   description: "Decades of North Indian cooking and Indian sweets, made fresh in Port Coquitlam.",
 };
 

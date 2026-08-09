@@ -4,7 +4,7 @@ import { PillButton } from "@/components/ui/PillButton";
 import { business } from "@/data/business";
 
 export const metadata: Metadata = {
-  title: "Catering — Bombay Sweets",
+  title: "Catering",
   description: "Bombay Sweets catering for weddings, graduations, corporate and holiday events in Port Coquitlam.",
 };
 
