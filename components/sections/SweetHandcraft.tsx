@@ -6,8 +6,8 @@ import gsap from "gsap";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 
 const HANDS_IMAGE = {
-  src: "/images/heritage/sweets-platter.jpg",
-  alt: "Hands preparing a sweet",
+  src: "/images/handcraft/hands-preparing.png",
+  alt: "Hands placing a pistachio garnish onto a freshly cut sweet",
 };
 
 const FINISHED_IMAGE = {
