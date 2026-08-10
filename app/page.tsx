@@ -1,4 +1,4 @@
-import { Hero } from "@/components/sections/Hero";
+import { SweetHero } from "@/components/sections/SweetHero";
 import { CravingDiscoveryBand } from "@/components/sections/CravingDiscoveryBand";
 import { SignatureDishes } from "@/components/sections/SignatureDishes";
 import { MenuExploreBand } from "@/components/sections/MenuExploreBand";
@@ -10,7 +10,7 @@ import { LocationHoursBand } from "@/components/sections/LocationHoursBand";
 export default function Home() {
   return (
     <main>
-      <Hero />
+      <SweetHero />
       <CravingDiscoveryBand />
       <SignatureDishes />
       <MenuExploreBand />
