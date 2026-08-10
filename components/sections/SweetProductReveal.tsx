@@ -18,20 +18,20 @@ interface RevealSweet {
 const REVEAL_SWEETS: RevealSweet[] = [
   {
     itemId: "kaju-katli",
-    image: "/images/macro/kaju-katli-diamond.png",
-    alt: "A diamond-cut kaju katli showing its cashew texture",
+    image: "/images/collection/kaju-katli.png",
+    alt: "A diamond-cut kaju katli with silver leaf on a warm ivory background",
     bg: "bg-cream",
   },
   {
     itemId: "gulab-jamun",
-    image: "/images/macro/gulab-jamun-syrup.png",
-    alt: "A glossy syrup-soaked gulab jamun",
+    image: "/images/collection/gulab-jamun.png",
+    alt: "A glossy syrup-soaked gulab jamun on a warm ivory background",
     bg: "bg-peach",
   },
   {
     itemId: "milk-cake",
-    image: "/images/heritage/sweets-platter.jpg",
-    alt: "Milk Cake",
+    image: "/images/collection/milk-cake.png",
+    alt: "A square piece of Indian milk cake on a warm ivory background",
     bg: "bg-cream",
   },
 ];

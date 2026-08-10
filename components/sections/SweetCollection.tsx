@@ -19,8 +19,8 @@ interface CollectionSweet {
 const COLLECTION: CollectionSweet[] = [
   {
     itemId: "gulab-jamun",
-    image: "/images/macro/gulab-jamun-syrup.png",
-    alt: "A glossy syrup-soaked gulab jamun",
+    image: "/images/collection/gulab-jamun.png",
+    alt: "A glossy syrup-soaked gulab jamun on a warm ivory background",
     depth: 0.9,
     top: "18%",
     left: "16%",
@@ -28,8 +28,8 @@ const COLLECTION: CollectionSweet[] = [
   },
   {
     itemId: "white-rasgulla",
-    image: "/images/heritage/sweets-platter.jpg",
-    alt: "White Rasgulla",
+    image: "/images/collection/white-rasgulla.png",
+    alt: "A white spongy rasgulla in light syrup on a warm ivory background",
     depth: 0.4,
     top: "10%",
     left: "62%",
@@ -37,8 +37,8 @@ const COLLECTION: CollectionSweet[] = [
   },
   {
     itemId: "besan-barfi",
-    image: "/images/macro/besan-barfi-full.png",
-    alt: "A diamond-cut besan barfi topped with silver leaf",
+    image: "/images/collection/besan-barfi.png",
+    alt: "A besan barfi with a pistachio topping on a warm ivory background",
     depth: 0.7,
     top: "48%",
     left: "72%",
@@ -46,8 +46,8 @@ const COLLECTION: CollectionSweet[] = [
   },
   {
     itemId: "kaju-katli",
-    image: "/images/macro/kaju-katli-diamond.png",
-    alt: "A diamond-cut kaju katli showing its cashew texture",
+    image: "/images/collection/kaju-katli.png",
+    alt: "A diamond-cut kaju katli with silver leaf on a warm ivory background",
     depth: 0.55,
     top: "58%",
     left: "12%",
@@ -55,8 +55,8 @@ const COLLECTION: CollectionSweet[] = [
   },
   {
     itemId: "milk-cake",
-    image: "/images/heritage/sweets-platter.jpg",
-    alt: "Milk Cake",
+    image: "/images/collection/milk-cake.png",
+    alt: "A square piece of Indian milk cake on a warm ivory background",
     depth: 0.25,
     top: "35%",
     left: "42%",
@@ -64,8 +64,8 @@ const COLLECTION: CollectionSweet[] = [
   },
   {
     itemId: "boondi-ladoo",
-    image: "/images/heritage/sweets-platter.jpg",
-    alt: "Boondi Ladoo",
+    image: "/images/collection/boondi-ladoo.png",
+    alt: "A round boondi ladoo on a warm ivory background",
     depth: 1,
     top: "68%",
     left: "40%",

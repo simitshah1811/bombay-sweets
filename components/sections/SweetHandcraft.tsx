@@ -11,8 +11,8 @@ const HANDS_IMAGE = {
 };
 
 const FINISHED_IMAGE = {
-  src: "/images/heritage/sweets-platter.jpg",
-  alt: "The finished sweet",
+  src: "/images/handcraft/finished-ladoo.jpg",
+  alt: "A tin of freshly made boondi ladoo in paper liners",
 };
 
 /**
