@@ -18,14 +18,14 @@ interface RevealSweet {
 const REVEAL_SWEETS: RevealSweet[] = [
   {
     itemId: "kaju-katli",
-    image: "/images/heritage/sweets-platter.jpg",
-    alt: "Kaju Katli",
+    image: "/images/macro/kaju-katli-diamond.png",
+    alt: "A diamond-cut kaju katli showing its cashew texture",
     bg: "bg-cream",
   },
   {
     itemId: "gulab-jamun",
-    image: "/images/heritage/sweets-platter.jpg",
-    alt: "Gulab Jamun",
+    image: "/images/macro/gulab-jamun-syrup.png",
+    alt: "A glossy syrup-soaked gulab jamun",
     bg: "bg-peach",
   },
   {

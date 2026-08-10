@@ -9,19 +9,21 @@ interface Ingredient {
   label: string;
   angle: number; // degrees, starting scatter direction
   radius: number; // px, starting distance from center
+  image?: string;
 }
 
+const PLACEHOLDER_IMAGE = "/images/heritage/sweets-platter.jpg";
+const CENTER_IMAGE = "/images/macro/besan-barfi-full.png";
+
 const INGREDIENTS: Ingredient[] = [
-  { label: "Pistachio", angle: 0, radius: 320 },
+  { label: "Pistachio", angle: 0, radius: 320, image: "/images/macro/pistachio-topping.png" },
   { label: "Almond", angle: 51, radius: 300 },
-  { label: "Saffron", angle: 103, radius: 330 },
+  { label: "Saffron", angle: 103, radius: 330, image: "/images/macro/saffron-strands.png" },
   { label: "Cardamom", angle: 154, radius: 290 },
   { label: "Rose Petals", angle: 206, radius: 310 },
   { label: "Milk", angle: 257, radius: 300 },
   { label: "Sugar", angle: 309, radius: 320 },
 ];
-
-const PLACEHOLDER_IMAGE = "/images/heritage/sweets-platter.jpg";
 
 export function SweetIngredientStory() {
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -103,8 +105,8 @@ export function SweetIngredientStory() {
             className="absolute left-1/2 top-1/2 h-[220px] w-[220px] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-full shadow-[0_30px_60px_-20px_rgba(59,42,29,0.4)]"
           >
             <Image
-              src={PLACEHOLDER_IMAGE}
-              alt="The finished sweet"
+              src={CENTER_IMAGE}
+              alt="A diamond-cut besan barfi topped with silver leaf"
               fill
               sizes="220px"
               className="object-cover"
@@ -121,7 +123,7 @@ export function SweetIngredientStory() {
             >
               <div className="h-16 w-16 overflow-hidden rounded-full border border-ink/15 bg-peach shadow-[0_12px_24px_-8px_rgba(59,42,29,0.3)]">
                 <Image
-                  src={PLACEHOLDER_IMAGE}
+                  src={ingredient.image ?? PLACEHOLDER_IMAGE}
                   alt={ingredient.label}
                   width={64}
                   height={64}
@@ -145,7 +147,7 @@ export function SweetIngredientStory() {
             <div key={ingredient.label} className="flex flex-col items-center gap-2">
               <div className="h-16 w-16 overflow-hidden rounded-full border border-ink/15 bg-peach">
                 <Image
-                  src={PLACEHOLDER_IMAGE}
+                  src={ingredient.image ?? PLACEHOLDER_IMAGE}
                   alt={ingredient.label}
                   width={64}
                   height={64}

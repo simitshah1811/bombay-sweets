@@ -19,8 +19,8 @@ interface CollectionSweet {
 const COLLECTION: CollectionSweet[] = [
   {
     itemId: "gulab-jamun",
-    image: "/images/heritage/sweets-platter.jpg",
-    alt: "Gulab Jamun",
+    image: "/images/macro/gulab-jamun-syrup.png",
+    alt: "A glossy syrup-soaked gulab jamun",
     depth: 0.9,
     top: "18%",
     left: "16%",
@@ -37,8 +37,8 @@ const COLLECTION: CollectionSweet[] = [
   },
   {
     itemId: "besan-barfi",
-    image: "/images/heritage/sweets-platter.jpg",
-    alt: "Besan Barfi",
+    image: "/images/macro/besan-barfi-full.png",
+    alt: "A diamond-cut besan barfi topped with silver leaf",
     depth: 0.7,
     top: "48%",
     left: "72%",
@@ -46,8 +46,8 @@ const COLLECTION: CollectionSweet[] = [
   },
   {
     itemId: "kaju-katli",
-    image: "/images/heritage/sweets-platter.jpg",
-    alt: "Kaju Katli",
+    image: "/images/macro/kaju-katli-diamond.png",
+    alt: "A diamond-cut kaju katli showing its cashew texture",
     depth: 0.55,
     top: "58%",
     left: "12%",

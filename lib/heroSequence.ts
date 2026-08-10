@@ -1,19 +1,16 @@
 /**
  * Hero sweet imagery for the push-in / macro-reveal / release scroll
- * sequence. Two photos of ONE sweet: a full shot and a macro/texture shot.
- * Currently placeholders (same source photo, cropped differently) so the
- * scroll mechanism is wired and testable before the real photos exist —
- * see SWEETS_ASSET_SHOTLIST.md for the shot specs. Swap these two paths
- * once real photos land; no other code changes needed.
+ * sequence: a besan barfi with silver leaf, shot both as a fuller diamond
+ * view and as an extreme macro of its broken corner/texture.
  */
-export const HERO_PHOTOS_READY = false;
+export const HERO_PHOTOS_READY = true;
 
 export const HERO_FULL_IMAGE = {
-  src: "/images/heritage/sweets-platter.jpg",
-  alt: "A signature Bombay Sweets sweet, presented on a warm neutral background",
+  src: "/images/macro/besan-barfi-full.png",
+  alt: "A diamond-cut besan barfi topped with silver leaf",
 };
 
 export const HERO_MACRO_IMAGE = {
-  src: "/images/heritage/sweets-platter.jpg",
-  alt: "Extreme close-up of the sweet's texture",
+  src: "/images/macro/besan-barfi-macro.png",
+  alt: "Extreme close-up of a besan barfi's broken corner, showing its granular texture under silver leaf",
 };
