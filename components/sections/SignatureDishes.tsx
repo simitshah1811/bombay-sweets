@@ -2,41 +2,18 @@ import Image from "next/image";
 import Link from "next/link";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { getMenuItem } from "@/data/menu";
+import { getDishImage } from "@/data/imageManifest";
 import { formatPrice } from "@/lib/utils/formatPrice";
 import { Reveal } from "@/components/motion/Reveal";
 import { HorizontalScroller } from "@/components/motion/HorizontalScroller";
 
-const SIGNATURE_DISHES = [
-  {
-    itemId: "butter-paneer",
-    image: "/images/heritage/curry-kadai.jpg",
-    alt: "Cubes of paneer in a creamy tomato gravy, finished with cream and cilantro",
-  },
-  {
-    itemId: "chicken-tikka-masala",
-    image: "/images/heritage/tikka-curry.jpg",
-    alt: "Charred chicken tikka pieces simmered in a rich tomato gravy",
-  },
-  {
-    itemId: "chicken-biryani",
-    image: "/images/heritage/thali-spread.jpg",
-    alt: "A spread of copper kadai bowls with rice and curries",
-  },
-  {
-    itemId: "kaju-katli",
-    image: "/images/heritage/sweets-platter.jpg",
-    alt: "An assortment of Indian sweets including barfi, ladoo, and jalebi",
-  },
-  {
-    itemId: "paneer-tikka",
-    image: "/images/placeholder.svg",
-    alt: "Paneer tikka",
-  },
-  {
-    itemId: "chaat-papdi",
-    image: "/images/placeholder.svg",
-    alt: "Chaat papdi",
-  },
+const SIGNATURE_DISH_IDS = [
+  "butter-paneer",
+  "chicken-tikka-masala",
+  "chicken-biryani",
+  "kaju-katli",
+  "paneer-tikka",
+  "chaat-papdi",
 ] as const;
 
 export function SignatureDishes() {
@@ -49,10 +26,11 @@ export function SignatureDishes() {
         </h2>
       </Reveal>
 
-      <HorizontalScroller count={SIGNATURE_DISHES.length} className="mt-12">
-        {SIGNATURE_DISHES.map(({ itemId, image, alt }) => {
+      <HorizontalScroller count={SIGNATURE_DISH_IDS.length} className="mt-12">
+        {SIGNATURE_DISH_IDS.map((itemId) => {
           const item = getMenuItem(itemId);
           if (!item) return null;
+          const image = getDishImage(itemId, item.categoryId);
           return (
             <Link
               key={itemId}
@@ -61,8 +39,8 @@ export function SignatureDishes() {
             >
               <div className="relative aspect-[4/5] w-full overflow-hidden rounded-image bg-peach">
                 <Image
-                  src={image}
-                  alt={alt}
+                  src={image.src}
+                  alt={image.alt}
                   fill
                   sizes="(min-width: 1024px) 320px, 260px"
                   className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"

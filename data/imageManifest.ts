@@ -6,12 +6,70 @@ export interface ManifestImage {
 /**
  * Populated during the imagery pass. Dish/category entries are added as
  * real (re-encoded archival) or AI-generated photoreal images land in
- * public/images/. Until then, lookups fall back to the neutral placeholder
- * so nothing renders a broken image.
+ * public/images/. Lookups fall back to the neutral placeholder so nothing
+ * renders a broken image where coverage is still incomplete.
  */
-export const DISH_IMAGES: Record<string, ManifestImage> = {};
+export const DISH_IMAGES: Record<string, ManifestImage> = {
+  "butter-paneer": {
+    src: "/images/dishes/butter-paneer.png",
+    alt: "Cubes of paneer in a creamy tomato gravy in a copper kadai, garnished with cream and cilantro",
+  },
+  "paneer-tikka": {
+    src: "/images/dishes/paneer-tikka.png",
+    alt: "Grilled paneer tikka skewers with charred edges in a cast iron skillet with lemon and mint",
+  },
+  "chaat-papdi": {
+    src: "/images/dishes/chaat-papdi.png",
+    alt: "Chaat papdi topped with chickpeas, yogurt, chutneys and sev in a steel bowl",
+  },
+  "chicken-tikka-masala": {
+    src: "/images/heritage/tikka-curry.jpg",
+    alt: "Charred chicken tikka pieces simmered in a rich tomato gravy",
+  },
+  "chicken-biryani": {
+    src: "/images/heritage/thali-spread.jpg",
+    alt: "A spread of copper kadai bowls with rice and curries",
+  },
+  "kaju-katli": {
+    src: "/images/heritage/sweets-platter.jpg",
+    alt: "An assortment of Indian sweets including barfi, ladoo, and jalebi",
+  },
+};
 
-export const CATEGORY_IMAGES: Record<string, ManifestImage> = {};
+export const CATEGORY_IMAGES: Record<string, ManifestImage> = {
+  appetizers: {
+    src: "/images/categories/appetizers.png",
+    alt: "Assorted fried Indian appetizers with mint and tamarind chutney on a slate plate",
+  },
+  "indo-chinese": {
+    src: "/images/categories/indo-chinese.png",
+    alt: "Chilli paneer tossed with bell peppers and onions in a glossy sauce in a wok",
+  },
+  "indian-style-burger": {
+    src: "/images/categories/indian-style-burger.png",
+    alt: "An aloo tikki burger with lettuce, tomato and onion on a toasted bun",
+  },
+  "tandoori-passion": {
+    src: "/images/categories/tandoori-passion.png",
+    alt: "Tandoori chicken skewers grilling over glowing coals",
+  },
+  "chicken-specialties": {
+    src: "/images/categories/chicken-specialties.png",
+    alt: "Butter chicken curry with basmati rice in a copper bowl",
+  },
+  "lamb-specialties": {
+    src: "/images/categories/lamb-specialties.png",
+    alt: "Lamb rogan josh curry with whole spices in a copper bowl",
+  },
+  "rice-specials": {
+    src: "/images/heritage/thali-spread.jpg",
+    alt: "A spread of copper kadai bowls with rice and curries",
+  },
+  sweets: {
+    src: "/images/heritage/sweets-platter.jpg",
+    alt: "An assortment of Indian sweets including barfi, ladoo, and jalebi",
+  },
+};
 
 export const PLACEHOLDER_IMAGE: ManifestImage = {
   src: "/images/placeholder.svg",
