@@ -69,6 +69,40 @@ export const CATEGORY_IMAGES: Record<string, ManifestImage> = {
     src: "/images/heritage/sweets-platter.jpg",
     alt: "An assortment of Indian sweets including barfi, ladoo, and jalebi",
   },
+  "vegetarian-specialties": {
+    // Direct fit: butter paneer is itself a vegetarian-specialties dish.
+    src: "/images/dishes/butter-paneer.png",
+    alt: "Cubes of paneer in a creamy tomato gravy in a copper kadai, garnished with cream and cilantro",
+  },
+  "chaat-specials": {
+    // Direct fit: chaat papdi is itself a chaat-specials dish.
+    src: "/images/dishes/chaat-papdi.png",
+    alt: "Chaat papdi topped with chickpeas, yogurt, chutneys and sev in a steel bowl",
+  },
+  "namkeen-snacks": {
+    // Approximate: closest existing photo is fried savory appetizers, not the
+    // namkeen mixes themselves.
+    src: "/images/categories/appetizers.png",
+    alt: "Assorted fried Indian appetizers with mint and tamarind chutney on a slate plate",
+  },
+  tidbits: {
+    // Approximate: chaat papdi's yogurt/chutney components overlap with this
+    // category (raita, chutneys) more than any other photo on hand.
+    src: "/images/dishes/chaat-papdi.png",
+    alt: "Chaat papdi topped with chickpeas, yogurt, chutneys and sev in a steel bowl",
+  },
+  "prawn-specialties": {
+    // Approximate: no seafood photo exists yet; a gravy-based meat curry in a
+    // bowl is the closest visual analog on hand.
+    src: "/images/categories/lamb-specialties.png",
+    alt: "A rich red gravy curry with whole spices in a copper bowl",
+  },
+  breads: {
+    // Approximate: no naan/roti photo exists yet; a bun is the closest bread
+    // texture on hand.
+    src: "/images/categories/indian-style-burger.png",
+    alt: "A toasted bun with visible bread texture",
+  },
 };
 
 export const PLACEHOLDER_IMAGE: ManifestImage = {
