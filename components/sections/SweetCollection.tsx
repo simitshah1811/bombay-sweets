@@ -73,6 +73,12 @@ const COLLECTION: CollectionSweet[] = [
   },
 ];
 
+// Below this, the desktop floating/parallax arrangement is replaced by a
+// plain static grid — scattered absolute-percent positions don't translate
+// to narrow viewports, and the brief explicitly asks for fewer simultaneous
+// moving elements on mobile rather than a shrunk desktop layout.
+const DESKTOP_QUERY = "(prefers-reduced-motion: no-preference) and (min-width: 1024px)";
+
 export function SweetCollection() {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -85,7 +91,7 @@ export function SweetCollection() {
 
     const mm = gsap.matchMedia();
 
-    mm.add("(prefers-reduced-motion: no-preference)", () => {
+    mm.add(DESKTOP_QUERY, () => {
       const cards = cardRefs.current.filter((el): el is HTMLDivElement => el !== null);
 
       gsap.set(cards, { opacity: 0, y: 60, scale: 0.85 });
@@ -123,18 +129,18 @@ export function SweetCollection() {
   }, []);
 
   return (
-    <div ref={wrapperRef} className="relative h-[260vh] motion-reduce:h-auto">
-      <div className="sticky top-0 h-screen w-full overflow-hidden bg-peach motion-reduce:static motion-reduce:h-auto motion-reduce:py-20">
+    <div ref={wrapperRef} className="relative h-auto lg:motion-reduce:h-auto lg:h-[260vh]">
+      <div className="w-full overflow-hidden bg-peach py-16 lg:sticky lg:top-0 lg:h-screen lg:py-0 lg:motion-reduce:static lg:motion-reduce:h-auto lg:motion-reduce:py-20">
         <div
           ref={headingRef}
-          className="relative z-10 px-6 pt-16 text-center motion-reduce:opacity-100 lg:px-10"
+          className="relative z-10 px-6 text-center opacity-100 lg:pt-16 lg:opacity-0 lg:motion-reduce:opacity-100 lg:px-10"
         >
           <h2 className="font-display text-[36px] leading-[0.95] text-ink lg:text-[52px]">
             A gallery of sweets
           </h2>
         </div>
 
-        <div className="relative mx-auto h-full max-w-5xl motion-reduce:static motion-reduce:grid motion-reduce:h-auto motion-reduce:grid-cols-2 motion-reduce:gap-6 motion-reduce:px-6 motion-reduce:py-12 sm:motion-reduce:grid-cols-3">
+        <div className="relative mx-auto mt-10 grid max-w-5xl grid-cols-2 gap-6 px-6 lg:mt-0 lg:block lg:h-full lg:gap-0 lg:px-0 lg:motion-reduce:grid lg:motion-reduce:grid-cols-3 lg:motion-reduce:gap-6 lg:motion-reduce:px-6 lg:motion-reduce:py-12 sm:grid-cols-3">
           {COLLECTION.map((sweet, i) => {
             const item = getMenuItem(sweet.itemId);
             if (!item) return null;
@@ -144,22 +150,21 @@ export function SweetCollection() {
                 ref={(el) => {
                   cardRefs.current[i] = el;
                 }}
-                className="absolute flex flex-col items-center gap-2 motion-reduce:static motion-reduce:opacity-100"
+                className="flex flex-col items-center gap-2 opacity-100 lg:absolute lg:opacity-0 lg:motion-reduce:static lg:motion-reduce:w-auto lg:motion-reduce:opacity-100"
                 style={{
                   top: sweet.top,
                   left: sweet.left,
-                  width: sweet.size,
                 }}
               >
                 <div
-                  className="relative aspect-square w-full overflow-hidden rounded-image shadow-[0_30px_60px_-20px_rgba(59,42,29,0.35)]"
-                  style={{ zIndex: Math.round(sweet.depth * 10) }}
+                  className="relative aspect-square w-full overflow-hidden rounded-image shadow-[0_30px_60px_-20px_rgba(59,42,29,0.35)] lg:w-[var(--sweet-size)]"
+                  style={{ zIndex: Math.round(sweet.depth * 10), "--sweet-size": `${sweet.size}px` } as React.CSSProperties}
                 >
                   <Image
                     src={sweet.image}
                     alt={sweet.alt}
                     fill
-                    sizes="280px"
+                    sizes="(min-width: 1024px) 280px, 45vw"
                     className="object-cover"
                   />
                 </div>
