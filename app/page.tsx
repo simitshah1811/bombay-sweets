@@ -1,5 +1,6 @@
 import { SweetHero } from "@/components/sections/SweetHero";
 import { SweetCollection } from "@/components/sections/SweetCollection";
+import { SweetProductReveal } from "@/components/sections/SweetProductReveal";
 import { CravingDiscoveryBand } from "@/components/sections/CravingDiscoveryBand";
 import { SignatureDishes } from "@/components/sections/SignatureDishes";
 import { MenuExploreBand } from "@/components/sections/MenuExploreBand";
@@ -13,6 +14,7 @@ export default function Home() {
     <main>
       <SweetHero />
       <SweetCollection />
+      <SweetProductReveal />
       <CravingDiscoveryBand />
       <SignatureDishes />
       <MenuExploreBand />
