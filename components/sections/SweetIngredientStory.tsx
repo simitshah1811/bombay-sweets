@@ -16,13 +16,13 @@ const PLACEHOLDER_IMAGE = "/images/heritage/sweets-platter.jpg";
 const CENTER_IMAGE = "/images/macro/besan-barfi-full.png";
 
 const INGREDIENTS: Ingredient[] = [
-  { label: "Pistachio", angle: 0, radius: 320, image: "/images/macro/pistachio-topping.png" },
-  { label: "Almond", angle: 51, radius: 300 },
+  { label: "Pistachio", angle: 0, radius: 320, image: "/images/ingredients/pistachio.png" },
+  { label: "Almond", angle: 51, radius: 300, image: "/images/ingredients/almond.png" },
   { label: "Saffron", angle: 103, radius: 330, image: "/images/macro/saffron-strands.png" },
-  { label: "Cardamom", angle: 154, radius: 290 },
-  { label: "Rose Petals", angle: 206, radius: 310 },
-  { label: "Milk", angle: 257, radius: 300 },
-  { label: "Sugar", angle: 309, radius: 320 },
+  { label: "Cardamom", angle: 154, radius: 290, image: "/images/ingredients/cardamom.png" },
+  { label: "Rose Petals", angle: 206, radius: 310, image: "/images/ingredients/rose-petals.png" },
+  { label: "Milk", angle: 257, radius: 300, image: "/images/ingredients/milk.png" },
+  { label: "Sugar", angle: 309, radius: 320, image: "/images/ingredients/sugar.png" },
 ];
 
 export function SweetIngredientStory() {
