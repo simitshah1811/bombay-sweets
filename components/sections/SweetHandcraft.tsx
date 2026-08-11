@@ -7,7 +7,7 @@ import { Eyebrow } from "@/components/ui/Eyebrow";
 
 const HANDS_IMAGE = {
   src: "/images/handcraft/hands-preparing.png",
-  alt: "Hands placing a pistachio garnish onto a freshly cut sweet",
+  alt: "Hands cutting a besan barfi slab into diamond-shaped pieces",
 };
 
 const FINISHED_IMAGE = {
