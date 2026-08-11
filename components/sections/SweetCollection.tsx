@@ -1,19 +1,20 @@
 "use client";
 
-import { useEffect, useRef } from "react";
 import Image from "next/image";
-import gsap from "gsap";
+import Link from "next/link";
+import { motion } from "motion/react";
 import { getMenuItem } from "@/data/menu";
 import { formatPrice } from "@/lib/utils/formatPrice";
+import { Eyebrow } from "@/components/ui/Eyebrow";
+import { Reveal } from "@/components/motion/Reveal";
+import { cn } from "@/lib/utils/cn";
 
 interface CollectionSweet {
   itemId: string;
   image: string;
   alt: string;
-  depth: number; // 0 = furthest back, 1 = closest/foreground
-  top: string;
-  left: string;
-  size: number; // px, base diameter
+  span: string;
+  hero?: boolean;
 }
 
 const COLLECTION: CollectionSweet[] = [
@@ -21,160 +22,89 @@ const COLLECTION: CollectionSweet[] = [
     itemId: "gulab-jamun",
     image: "/images/collection/gulab-jamun.png",
     alt: "A glossy syrup-soaked gulab jamun on a warm ivory background",
-    depth: 0.9,
-    top: "18%",
-    left: "16%",
-    size: 260,
+    span: "col-span-2 row-span-2",
+    hero: true,
   },
   {
     itemId: "white-rasgulla",
     image: "/images/collection/white-rasgulla.png",
     alt: "A white spongy rasgulla in light syrup on a warm ivory background",
-    depth: 0.4,
-    top: "10%",
-    left: "62%",
-    size: 190,
+    span: "col-span-1 row-span-1",
   },
   {
     itemId: "besan-barfi",
     image: "/images/collection/besan-barfi.png",
     alt: "A besan barfi with a pistachio topping on a warm ivory background",
-    depth: 0.7,
-    top: "48%",
-    left: "72%",
-    size: 230,
+    span: "col-span-1 row-span-2",
   },
   {
     itemId: "kaju-katli",
     image: "/images/collection/kaju-katli.png",
     alt: "A diamond-cut kaju katli with silver leaf on a warm ivory background",
-    depth: 0.55,
-    top: "58%",
-    left: "12%",
-    size: 210,
+    span: "col-span-1 row-span-1",
   },
   {
     itemId: "milk-cake",
     image: "/images/collection/milk-cake.png",
     alt: "A square piece of Indian milk cake on a warm ivory background",
-    depth: 0.25,
-    top: "35%",
-    left: "42%",
-    size: 170,
+    span: "col-span-1 row-span-1 lg:col-span-2",
   },
   {
     itemId: "boondi-ladoo",
     image: "/images/collection/boondi-ladoo.png",
     alt: "A round boondi ladoo on a warm ivory background",
-    depth: 1,
-    top: "68%",
-    left: "40%",
-    size: 280,
+    span: "col-span-1 row-span-1 lg:col-span-2",
   },
 ];
 
-// Below this, the desktop floating/parallax arrangement is replaced by a
-// plain static grid — scattered absolute-percent positions don't translate
-// to narrow viewports, and the brief explicitly asks for fewer simultaneous
-// moving elements on mobile rather than a shrunk desktop layout.
-const DESKTOP_QUERY = "(prefers-reduced-motion: no-preference) and (min-width: 1024px)";
-
 export function SweetCollection() {
-  const wrapperRef = useRef<HTMLDivElement>(null);
-  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const headingRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const wrapper = wrapperRef.current;
-    const heading = headingRef.current;
-    if (!wrapper || !heading) return;
-
-    const mm = gsap.matchMedia();
-
-    mm.add(DESKTOP_QUERY, () => {
-      const cards = cardRefs.current.filter((el): el is HTMLDivElement => el !== null);
-
-      gsap.set(cards, { opacity: 0, y: 60, scale: 0.85 });
-      gsap.set(heading, { opacity: 0, y: 20 });
-
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: wrapper,
-          start: "top top",
-          end: "bottom bottom",
-          scrub: 0.6,
-          pin: wrapper.firstElementChild,
-        },
-        defaults: { ease: "none" },
-      });
-
-      tl.to(heading, { opacity: 1, y: 0, duration: 0.12 }, 0);
-
-      cards.forEach((card, i) => {
-        const sweet = COLLECTION[i];
-        const start = 0.05 + i * 0.03;
-        tl.to(card, { opacity: 1, scale: 1, y: 0, duration: 0.18 }, start);
-        // Depth-based parallax across the remainder of the pin: closer
-        // (higher depth) sweets travel further for a stronger foreground feel.
-        tl.to(card, { y: -sweet.depth * 220, duration: 0.75 }, start + 0.1);
-      });
-
-      return () => {
-        tl.scrollTrigger?.kill();
-        tl.kill();
-      };
-    });
-
-    return () => mm.revert();
-  }, []);
-
   return (
-    <div ref={wrapperRef} className="relative h-auto lg:motion-reduce:h-auto lg:h-[260vh]">
-      <div className="w-full overflow-hidden bg-peach py-16 lg:sticky lg:top-0 lg:h-screen lg:py-0 lg:motion-reduce:static lg:motion-reduce:h-auto lg:motion-reduce:py-20">
-        <div
-          ref={headingRef}
-          className="relative z-10 px-6 text-center opacity-100 lg:pt-16 lg:opacity-0 lg:motion-reduce:opacity-100 lg:px-10"
-        >
-          <h2 className="font-display text-[36px] leading-[0.95] text-ink lg:text-[52px]">
-            A gallery of sweets
-          </h2>
-        </div>
+    <section className="bg-peach px-6 py-20 lg:px-10 lg:py-28">
+      <Reveal className="text-center">
+        <Eyebrow className="justify-center">The Collection</Eyebrow>
+        <h2 className="mt-4 font-display text-[36px] leading-[0.95] text-ink lg:text-[52px]">
+          A gallery of sweets
+        </h2>
+      </Reveal>
 
-        <div className="relative mx-auto mt-10 grid max-w-5xl grid-cols-2 gap-6 px-6 lg:mt-0 lg:block lg:h-full lg:gap-0 lg:px-0 lg:motion-reduce:grid lg:motion-reduce:grid-cols-3 lg:motion-reduce:gap-6 lg:motion-reduce:px-6 lg:motion-reduce:py-12 sm:grid-cols-3">
-          {COLLECTION.map((sweet, i) => {
-            const item = getMenuItem(sweet.itemId);
-            if (!item) return null;
-            return (
-              <div
-                key={sweet.itemId}
-                ref={(el) => {
-                  cardRefs.current[i] = el;
-                }}
-                className="flex flex-col items-center gap-2 opacity-100 lg:absolute lg:opacity-0 lg:motion-reduce:static lg:motion-reduce:w-auto lg:motion-reduce:opacity-100"
-                style={{
-                  top: sweet.top,
-                  left: sweet.left,
-                }}
-              >
-                <div
-                  className="relative aspect-square w-full overflow-hidden rounded-image shadow-[0_30px_60px_-20px_rgba(59,42,29,0.35)] lg:w-[var(--sweet-size)]"
-                  style={{ zIndex: Math.round(sweet.depth * 10), "--sweet-size": `${sweet.size}px` } as React.CSSProperties}
-                >
-                  <Image
-                    src={sweet.image}
-                    alt={sweet.alt}
-                    fill
-                    sizes="(min-width: 1024px) 280px, 45vw"
-                    className="object-cover"
-                  />
+      <div className="mx-auto mt-12 grid max-w-6xl grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 lg:auto-rows-[220px] lg:gap-6">
+        {COLLECTION.map((sweet, i) => {
+          const item = getMenuItem(sweet.itemId);
+          if (!item) return null;
+          return (
+            <motion.div
+              key={sweet.itemId}
+              initial={{ opacity: 0, y: 24, scale: 0.96 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
+              viewport={{ once: true, margin: "-10% 0px" }}
+              transition={{ duration: 0.6, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
+              className={cn("group relative aspect-square overflow-hidden rounded-image lg:aspect-auto", sweet.span)}
+            >
+              <Link href={`/menu#${item.id}`} className="absolute inset-0">
+                <Image
+                  src={sweet.image}
+                  alt={sweet.alt}
+                  fill
+                  sizes={sweet.hero ? "(min-width: 1024px) 50vw, 90vw" : "(min-width: 1024px) 25vw, 45vw"}
+                  className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                  priority={sweet.hero}
+                />
+                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink/75 via-ink/10 to-transparent px-5 pb-4 pt-12">
+                  <span
+                    className={cn(
+                      "block font-display text-cream",
+                      sweet.hero ? "text-2xl lg:text-3xl" : "text-lg lg:text-xl"
+                    )}
+                  >
+                    {item.name.replace(/\s*\(1 lb\)/, "")}
+                  </span>
+                  <span className="mt-1 block font-body text-sm text-cream/80">{formatPrice(item.price)}</span>
                 </div>
-                <span className="font-body text-sm text-ink">{item.name}</span>
-                <span className="font-body text-xs text-ink/60">{formatPrice(item.price)}</span>
-              </div>
-            );
-          })}
-        </div>
+              </Link>
+            </motion.div>
+          );
+        })}
       </div>
-    </div>
+    </section>
   );
 }
