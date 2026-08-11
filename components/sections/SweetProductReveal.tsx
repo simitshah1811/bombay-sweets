@@ -5,8 +5,7 @@ import Image from "next/image";
 import gsap from "gsap";
 import { getMenuItem } from "@/data/menu";
 import { formatPrice } from "@/lib/utils/formatPrice";
-import { PillButton } from "@/components/ui/PillButton";
-import { business } from "@/data/business";
+import { AddToCartButton } from "@/components/cart/AddToCartButton";
 
 interface RevealSweet {
   itemId: string;
@@ -156,9 +155,7 @@ export function SweetProductReveal() {
                   <p className="font-body text-lg text-ink/70">{item.description}</p>
                 )}
                 <span className="font-body text-2xl text-ink">{formatPrice(item.price)}</span>
-                <PillButton href={business.phoneHref} className="mt-2">
-                  Call to order
-                </PillButton>
+                <AddToCartButton itemId={sweet.itemId} className="mt-2" />
               </div>
             </div>
           );

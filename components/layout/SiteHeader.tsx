@@ -5,9 +5,9 @@ import Link from "next/link";
 import { cn } from "@/lib/utils/cn";
 import { PillButton } from "@/components/ui/PillButton";
 import { NAV_LINKS, CRAVING_HREF } from "@/lib/navigation";
-import { business } from "@/data/business";
 import { MobileNavSheet } from "@/components/layout/MobileNavSheet";
 import { Wordmark } from "@/components/ui/Wordmark";
+import { CartButton } from "@/components/cart/CartButton";
 
 export function SiteHeader() {
   const [scrolled, setScrolled] = useState(false);
@@ -48,9 +48,7 @@ export function SiteHeader() {
           <PillButton href={CRAVING_HREF} variant="ghost">
             What&rsquo;s your craving?
           </PillButton>
-          <PillButton href={business.phoneHref} variant="filled">
-            Call to order
-          </PillButton>
+          <CartButton />
         </div>
 
         <button

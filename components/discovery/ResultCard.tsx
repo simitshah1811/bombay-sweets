@@ -3,7 +3,7 @@ import type { DiscoveryResult } from "@/lib/discovery/score";
 import { getDishImage } from "@/data/imageManifest";
 import { formatPrice } from "@/lib/utils/formatPrice";
 import { PillButton } from "@/components/ui/PillButton";
-import { business } from "@/data/business";
+import { AddToCartButton } from "@/components/cart/AddToCartButton";
 
 export function ResultCard({ result }: { result: DiscoveryResult }) {
   const { item, reasons } = result;
@@ -31,9 +31,7 @@ export function ResultCard({ result }: { result: DiscoveryResult }) {
           <PillButton href={`/menu#${item.id}`} variant="ghost" className="px-4 py-2 text-sm">
             View on menu
           </PillButton>
-          <PillButton href={business.phoneHref} variant="filled" className="px-4 py-2 text-sm">
-            Call to order
-          </PillButton>
+          <AddToCartButton itemId={item.id} className="px-4 py-2 text-sm" />
         </div>
       </div>
     </div>

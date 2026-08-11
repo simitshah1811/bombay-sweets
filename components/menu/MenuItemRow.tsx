@@ -2,6 +2,7 @@ import type { MenuItem } from "@/data/types";
 import { getItemTags } from "@/data/menu-tags";
 import { DietDot, SpiceMarks } from "@/components/ui/Badge";
 import { formatPrice } from "@/lib/utils/formatPrice";
+import { AddToCartButton } from "@/components/cart/AddToCartButton";
 
 export function MenuItemRow({ item }: { item: MenuItem }) {
   const tags = getItemTags(item.id);
@@ -21,7 +22,10 @@ export function MenuItemRow({ item }: { item: MenuItem }) {
           <p className="max-w-xl font-body text-sm leading-relaxed text-ink/60">{item.description}</p>
         )}
       </div>
-      <span className="shrink-0 font-body text-[17px] text-ink">{formatPrice(item.price)}</span>
+      <div className="flex shrink-0 items-center gap-3">
+        <span className="font-body text-[17px] text-ink">{formatPrice(item.price)}</span>
+        <AddToCartButton itemId={item.id} size="compact" />
+      </div>
     </div>
   );
 }

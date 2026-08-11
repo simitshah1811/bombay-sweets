@@ -6,6 +6,7 @@ import { getDishImage } from "@/data/imageManifest";
 import { formatPrice } from "@/lib/utils/formatPrice";
 import { Reveal } from "@/components/motion/Reveal";
 import { HorizontalScroller } from "@/components/motion/HorizontalScroller";
+import { AddToCartButton } from "@/components/cart/AddToCartButton";
 
 const SIGNATURE_DISH_IDS = [
   "butter-paneer",
@@ -46,9 +47,12 @@ export function SignatureDishes() {
                   className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
                 />
               </div>
-              <div className="flex items-baseline justify-between gap-3">
-                <span className="font-body text-lg text-ink">{item.name}</span>
-                <span className="font-body text-ink/70">{formatPrice(item.price)}</span>
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex flex-col gap-0.5">
+                  <span className="font-body text-lg text-ink">{item.name}</span>
+                  <span className="font-body text-sm text-ink/70">{formatPrice(item.price)}</span>
+                </div>
+                <AddToCartButton itemId={itemId} size="compact" />
               </div>
             </Link>
           );

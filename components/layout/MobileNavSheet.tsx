@@ -4,8 +4,8 @@ import Link from "next/link";
 import { cn } from "@/lib/utils/cn";
 import { PillButton } from "@/components/ui/PillButton";
 import { NAV_LINKS, CRAVING_HREF } from "@/lib/navigation";
-import { business } from "@/data/business";
 import { Wordmark } from "@/components/ui/Wordmark";
+import { CartButton } from "@/components/cart/CartButton";
 
 export function MobileNavSheet({
   open,
@@ -66,9 +66,9 @@ export function MobileNavSheet({
           <PillButton href={CRAVING_HREF} variant="ghost" onClick={onClose} className="w-full">
             What&rsquo;s your craving?
           </PillButton>
-          <PillButton href={business.phoneHref} variant="filled" className="w-full">
-            Call to order
-          </PillButton>
+          <div onClick={onClose}>
+            <CartButton className="w-full" />
+          </div>
         </div>
       </div>
     </div>

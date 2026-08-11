@@ -3,6 +3,8 @@ import { fraunces, lora, inter } from "@/lib/fonts";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { MotionProvider } from "@/components/motion/MotionProvider";
+import { CartProvider } from "@/lib/cart/CartContext";
+import { CartDrawer } from "@/components/cart/CartDrawer";
 import { business } from "@/data/business";
 import "./globals.css";
 
@@ -37,11 +39,14 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${fraunces.variable} ${lora.variable} ${inter.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-cream text-ink">
-        <MotionProvider>
-          <SiteHeader />
-          <div className="flex-1">{children}</div>
-          <SiteFooter />
-        </MotionProvider>
+        <CartProvider>
+          <MotionProvider>
+            <SiteHeader />
+            <div className="flex-1">{children}</div>
+            <SiteFooter />
+            <CartDrawer />
+          </MotionProvider>
+        </CartProvider>
       </body>
     </html>
   );
