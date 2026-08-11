@@ -4,13 +4,14 @@ import { PillButton } from "@/components/ui/PillButton";
 import { NAV_LINKS, CRAVING_HREF } from "@/lib/navigation";
 import { business } from "@/data/business";
 import { Reveal } from "@/components/motion/Reveal";
+import { Wordmark } from "@/components/ui/Wordmark";
 
 export function SiteFooter() {
   return (
     <footer className="bg-ink text-cream">
       <Reveal y={0} className="mx-auto grid max-w-[1600px] gap-12 px-6 py-16 lg:grid-cols-[1.2fr_1fr_1fr] lg:px-10 lg:py-24">
         <div className="flex flex-col gap-5">
-          <span className="font-display text-4xl">Bombay Sweets</span>
+          <Wordmark tone="cream" size="large" />
           <p className="max-w-sm font-body text-cream/70">{business.tagline}</p>
           <PillButton href={CRAVING_HREF} variant="ghostOnDark" className="w-fit">
             What&rsquo;s your craving?

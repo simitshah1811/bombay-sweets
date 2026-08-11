@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils/cn";
 import { PillButton } from "@/components/ui/PillButton";
 import { NAV_LINKS, CRAVING_HREF } from "@/lib/navigation";
 import { business } from "@/data/business";
+import { Wordmark } from "@/components/ui/Wordmark";
 
 export function MobileNavSheet({
   open,
@@ -35,7 +36,7 @@ export function MobileNavSheet({
         )}
       >
         <div className="flex items-center justify-between">
-          <span className="font-display text-2xl text-ink">Bombay Sweets</span>
+          <Wordmark />
           <button
             type="button"
             onClick={onClose}

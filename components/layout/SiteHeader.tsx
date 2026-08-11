@@ -7,6 +7,7 @@ import { PillButton } from "@/components/ui/PillButton";
 import { NAV_LINKS, CRAVING_HREF } from "@/lib/navigation";
 import { business } from "@/data/business";
 import { MobileNavSheet } from "@/components/layout/MobileNavSheet";
+import { Wordmark } from "@/components/ui/Wordmark";
 
 export function SiteHeader() {
   const [scrolled, setScrolled] = useState(false);
@@ -27,8 +28,8 @@ export function SiteHeader() {
       )}
     >
       <div className="mx-auto flex max-w-[1600px] items-center justify-between gap-6 px-6 py-5 lg:px-10">
-        <Link href="/" className="font-display text-2xl tracking-tight text-ink shrink-0">
-          Bombay Sweets
+        <Link href="/" className="shrink-0">
+          <Wordmark />
         </Link>
 
         <nav className="hidden items-center gap-8 lg:flex">
