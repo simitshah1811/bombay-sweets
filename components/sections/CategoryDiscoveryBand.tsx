@@ -71,8 +71,8 @@ export function CategoryDiscoveryBand() {
                   className={cn(
                     "relative overflow-hidden rounded-t-full border transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]",
                     isActive
-                      ? "h-[270px] w-[138px] -translate-y-3 border-ink/25 opacity-100 shadow-[0_20px_40px_-16px_rgba(59,42,29,0.4)] xl:h-[310px] xl:w-[162px] 2xl:h-[360px] 2xl:w-[188px]"
-                      : "h-[208px] w-[104px] translate-y-0 border-ink/10 opacity-70 group-hover:-translate-y-1 group-hover:opacity-90 xl:h-[240px] xl:w-[124px] 2xl:h-[280px] 2xl:w-[144px]"
+                      ? "h-[270px] w-[138px] -translate-y-3 border-ink/25 shadow-[0_20px_40px_-16px_rgba(59,42,29,0.4)] xl:h-[310px] xl:w-[162px] 2xl:h-[360px] 2xl:w-[188px]"
+                      : "h-[208px] w-[104px] translate-y-0 border-ink/10 group-hover:-translate-y-1 xl:h-[240px] xl:w-[124px] 2xl:h-[280px] 2xl:w-[144px]"
                   )}
                 >
                   {image && (
@@ -89,7 +89,7 @@ export function CategoryDiscoveryBand() {
                 <span
                   className={cn(
                     "font-display leading-[1.1] transition-all duration-500",
-                    isActive ? "text-lg text-ink" : "text-sm text-ink/50 group-hover:text-ink/75"
+                    isActive ? "text-lg text-ink" : "text-sm text-ink/80 group-hover:text-ink"
                   )}
                 >
                   {category.name}
