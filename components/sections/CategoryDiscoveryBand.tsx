@@ -3,119 +3,146 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { AnimatePresence, motion } from "motion/react";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Reveal } from "@/components/motion/Reveal";
 import { HorizontalScroller } from "@/components/motion/HorizontalScroller";
 import { CATEGORY_IMAGES } from "@/data/imageManifest";
+import { getCategoryItems } from "@/data/menu";
 import { cn } from "@/lib/utils/cn";
 
+// Short, evocative lines grounded in what's actually true of each real
+// category (per data/menu.ts) -- not claims about the business, just
+// editorial framing, the same way the hero/section headlines are.
 const FEATURED_CATEGORIES = [
-  { id: "sweets", name: "Sweets" },
-  { id: "chaat-specials", name: "Chaat" },
-  { id: "tandoori-passion", name: "Tandoori" },
-  { id: "chicken-specialties", name: "Curries" },
-  { id: "vegetarian-specialties", name: "Vegetarian" },
-  { id: "rice-specials", name: "Biryani & Rice" },
-  { id: "breads", name: "Breads" },
-  { id: "namkeen-snacks", name: "Snacks" },
+  { id: "sweets", name: "Sweets", tagline: "Milk-based mithai, finished with silver leaf." },
+  { id: "chaat-specials", name: "Chaat", tagline: "Crisp, tangy, and layered to order." },
+  { id: "tandoori-passion", name: "Tandoori", tagline: "Marinated and finished over live fire." },
+  { id: "chicken-specialties", name: "Curries", tagline: "Slow-simmered gravies, rich with spice." },
+  { id: "vegetarian-specialties", name: "Vegetarian", tagline: "Vegetable and paneer specialties, done right." },
+  { id: "rice-specials", name: "Biryani & Rice", tagline: "Layered rice, cooked low and slow." },
+  { id: "breads", name: "Breads", tagline: "Baked fresh in the tandoor, to order." },
+  { id: "namkeen-snacks", name: "Snacks", tagline: "Small plates, made for sharing." },
 ];
+
+const COUNT = FEATURED_CATEGORIES.length;
+
+function pad(n: number) {
+  return String(n).padStart(2, "0");
+}
 
 export function CategoryDiscoveryBand() {
   const [active, setActive] = useState(0);
   const activeCategory = FEATURED_CATEGORIES[active];
-  const activeImage = CATEGORY_IMAGES[activeCategory.id];
 
   return (
     <section className="bg-peach px-6 py-20 lg:px-10 lg:py-28">
-      <Reveal>
-        <Eyebrow>06 — Browse by Craving</Eyebrow>
-        <h2 className="mt-4 max-w-lg font-display text-[40px] leading-[0.95] text-ink lg:text-[56px]">
-          Where do you want to start?
+      <Reveal className="text-center">
+        <Eyebrow className="justify-center">06 — The Menu</Eyebrow>
+        <h2 className="mt-4 font-display text-[40px] leading-[0.95] text-ink lg:text-[56px]">
+          Every craving, framed.
         </h2>
       </Reveal>
 
-      <Reveal delay={0.1} className="mt-14 hidden lg:grid lg:grid-cols-[1.1fr_1fr] lg:gap-16">
-        <ul className="flex flex-col border-t border-ink/15">
-          {FEATURED_CATEGORIES.map((category, i) => (
-            <li key={category.id} className="border-b border-ink/15">
-              <Link
-                href={`/menu#${category.id}`}
-                onMouseEnter={() => setActive(i)}
-                className="group flex items-center gap-6 py-6"
+      {/* Desktop: a horizontal procession of arches, all eight visible at once */}
+      <Reveal delay={0.1} className="mt-16 hidden lg:block">
+        <div className="flex items-end justify-center gap-3 xl:gap-4">
+          {FEATURED_CATEGORIES.map((category, i) => {
+            const image = CATEGORY_IMAGES[category.id];
+            const isActive = i === active;
+            return (
+              <button
+                key={category.id}
+                type="button"
+                onClick={() => setActive(i)}
+                aria-pressed={isActive}
+                aria-label={`Show ${category.name}`}
+                className="group flex flex-col items-center gap-3 rounded-t-full outline-none focus-visible:ring-2 focus-visible:ring-saffron focus-visible:ring-offset-2 focus-visible:ring-offset-peach"
               >
-                <span className="font-label text-xs text-ink/40">{String(i + 1).padStart(2, "0")}</span>
                 <span
                   className={cn(
-                    "flex-1 font-display text-3xl transition-all duration-300 xl:text-4xl",
-                    i === active ? "translate-x-1.5 text-ink" : "text-ink/35"
+                    "font-label text-[10px] tabular-nums transition-colors duration-500",
+                    isActive ? "text-ink/50" : "text-ink/25"
+                  )}
+                >
+                  {pad(i + 1)}
+                </span>
+
+                <div
+                  className={cn(
+                    "relative overflow-hidden rounded-t-full border transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]",
+                    isActive
+                      ? "h-[240px] w-[124px] -translate-y-3 border-ink/25 opacity-100 shadow-[0_20px_40px_-16px_rgba(59,42,29,0.4)]"
+                      : "h-[184px] w-[92px] translate-y-0 border-ink/10 opacity-70 group-hover:-translate-y-1 group-hover:opacity-90"
+                  )}
+                >
+                  {image && (
+                    <Image
+                      src={image.src}
+                      alt={image.alt}
+                      fill
+                      sizes="140px"
+                      className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+                    />
+                  )}
+                </div>
+
+                <span
+                  className={cn(
+                    "font-display leading-[1.1] transition-all duration-500",
+                    isActive ? "text-lg text-ink" : "text-sm text-ink/50 group-hover:text-ink/75"
                   )}
                 >
                   {category.name}
                 </span>
-                <span
-                  className={cn(
-                    "font-body text-xl transition-all duration-300 group-hover:translate-x-1",
-                    i === active ? "text-ink" : "text-ink/30"
-                  )}
-                >
-                  →
-                </span>
-              </Link>
-            </li>
-          ))}
-        </ul>
+              </button>
+            );
+          })}
+        </div>
 
-        <div className="relative aspect-[4/5] w-full overflow-hidden rounded-image shadow-[0_30px_60px_-20px_rgba(59,42,29,0.35)]">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeCategory.id}
-              initial={{ opacity: 0, scale: 1.04 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-              className="absolute inset-0"
-            >
-              <Image
-                src={activeImage.src}
-                alt={activeImage.alt}
-                fill
-                sizes="(min-width: 1024px) 45vw, 90vw"
-                className="object-cover"
-              />
-            </motion.div>
-          </AnimatePresence>
-          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink/70 to-transparent px-8 pb-8 pt-16">
-            <span className="font-display text-3xl text-cream">{activeCategory.name}</span>
-          </div>
+        <div className="mx-auto mt-8 max-w-md text-center">
+          <p className="font-body text-ink/70">{activeCategory.tagline}</p>
+          <Link
+            href={`/menu#${activeCategory.id}`}
+            className="mt-3 inline-block font-label text-xs uppercase tracking-[0.15em] text-ink/70 underline decoration-ink/30 underline-offset-4 transition-colors hover:text-ink hover:decoration-ink"
+          >
+            Explore →
+          </Link>
         </div>
       </Reveal>
 
+      {/* Mobile: one large arch at a time, swipe/tap through */}
       <div className="mt-12 lg:hidden">
-        <HorizontalScroller count={FEATURED_CATEGORIES.length}>
-          {FEATURED_CATEGORIES.map((category) => {
+        <HorizontalScroller count={COUNT}>
+          {FEATURED_CATEGORIES.map((category, i) => {
             const image = CATEGORY_IMAGES[category.id];
+            const sampleDishes = getCategoryItems(category.id)
+              .slice(0, 3)
+              .map((item) => item.name.replace(/\s*\(1 lb\)/, ""));
             return (
               <Link
                 key={category.id}
                 href={`/menu#${category.id}`}
-                className="group flex w-[220px] shrink-0 snap-start flex-col gap-3"
+                className="flex w-[240px] shrink-0 snap-start flex-col items-center gap-4 text-center"
               >
-                <div className="relative aspect-[4/5] w-full overflow-hidden rounded-image">
-                  <Image
-                    src={image.src}
-                    alt={image.alt}
-                    fill
-                    sizes="220px"
-                    className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
-                  />
+                <span className="font-label text-[10px] tabular-nums text-ink/40">{pad(i + 1)}</span>
+                <div className="relative h-[300px] w-[190px] overflow-hidden rounded-t-full border border-ink/10">
+                  {image && (
+                    <Image src={image.src} alt={image.alt} fill sizes="190px" className="object-cover" />
+                  )}
                 </div>
-                <span className="font-display text-xl text-ink">{category.name}</span>
+                <span className="font-display text-2xl text-ink">{category.name}</span>
+                {sampleDishes.length > 0 && (
+                  <span className="font-body text-sm text-ink/60">{sampleDishes.join(" · ")}</span>
+                )}
               </Link>
             );
           })}
         </HorizontalScroller>
       </div>
+
+      <p className="mt-14 text-center font-body text-sm italic text-ink/50">
+        Eight ways to crave it. One menu.
+      </p>
     </section>
   );
 }
