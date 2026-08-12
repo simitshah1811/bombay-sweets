@@ -9,7 +9,7 @@ export function MenuExploreBand() {
       <Reveal className="order-2 flex flex-col items-start gap-5 lg:order-1">
         <Eyebrow>04 — Full Menu</Eyebrow>
         <h2 className="font-display text-[40px] leading-[0.95] text-ink lg:text-[56px]">
-          Fifteen kinds of craving, one menu
+          From sweets to biryani, one menu.
         </h2>
         <p className="max-w-md font-body text-lg text-ink/70">
           Chaat, tandoori, curries, biryani, breads, snacks, sweets — every dish we make, priced

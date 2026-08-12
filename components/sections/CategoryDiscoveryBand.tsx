@@ -47,8 +47,8 @@ export function CategoryDiscoveryBand() {
                 <span className="font-label text-xs text-ink/40">{String(i + 1).padStart(2, "0")}</span>
                 <span
                   className={cn(
-                    "flex-1 font-display text-3xl transition-colors duration-300 xl:text-4xl",
-                    i === active ? "text-ink" : "text-ink/35"
+                    "flex-1 font-display text-3xl transition-all duration-300 xl:text-4xl",
+                    i === active ? "translate-x-1.5 text-ink" : "text-ink/35"
                   )}
                 >
                   {category.name}
