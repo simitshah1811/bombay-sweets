@@ -45,7 +45,7 @@ export function CategoryDiscoveryBand() {
 
       {/* Desktop: a horizontal procession of arches, all eight visible at once */}
       <Reveal delay={0.1} className="mt-16 hidden lg:block">
-        <div className="flex items-end justify-center gap-3 xl:gap-4">
+        <div className="flex items-end justify-center gap-2 xl:gap-3 2xl:gap-4">
           {FEATURED_CATEGORIES.map((category, i) => {
             const image = CATEGORY_IMAGES[category.id];
             const isActive = i === active;
@@ -71,8 +71,8 @@ export function CategoryDiscoveryBand() {
                   className={cn(
                     "relative overflow-hidden rounded-t-full border transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]",
                     isActive
-                      ? "h-[240px] w-[124px] -translate-y-3 border-ink/25 opacity-100 shadow-[0_20px_40px_-16px_rgba(59,42,29,0.4)]"
-                      : "h-[184px] w-[92px] translate-y-0 border-ink/10 opacity-70 group-hover:-translate-y-1 group-hover:opacity-90"
+                      ? "h-[270px] w-[138px] -translate-y-3 border-ink/25 opacity-100 shadow-[0_20px_40px_-16px_rgba(59,42,29,0.4)] xl:h-[310px] xl:w-[162px] 2xl:h-[360px] 2xl:w-[188px]"
+                      : "h-[208px] w-[104px] translate-y-0 border-ink/10 opacity-70 group-hover:-translate-y-1 group-hover:opacity-90 xl:h-[240px] xl:w-[124px] 2xl:h-[280px] 2xl:w-[144px]"
                   )}
                 >
                   {image && (
@@ -80,7 +80,7 @@ export function CategoryDiscoveryBand() {
                       src={image.src}
                       alt={image.alt}
                       fill
-                      sizes="140px"
+                      sizes="(min-width: 1536px) 190px, (min-width: 1280px) 165px, 140px"
                       className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
                     />
                   )}
