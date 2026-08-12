@@ -1,16 +1,88 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { motion, useScroll, useTransform } from "motion/react";
+import { AnimatePresence, motion, useScroll, useTransform } from "motion/react";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { PillButton } from "@/components/ui/PillButton";
 import { CRAVING_HREF } from "@/lib/navigation";
 
-const HERO_IMAGE = {
-  src: "/images/hero/hero-mosaic.png",
-  alt: "A dense mosaic of assorted Indian sweets — gulab jamun, ladoo, and barfi with silver leaf",
-};
+const HERO_FRAMES = [
+  {
+    src: "/images/hero/hero-cinemagraph-1.png",
+    alt: "Hands placing a square of edible silver leaf onto a besan barfi",
+  },
+  {
+    src: "/images/hero/hero-cinemagraph-2.png",
+    alt: "Hands pressing silver leaf onto a besan barfi, almonds and pistachios scattered nearby",
+  },
+  {
+    src: "/images/hero/hero-cinemagraph-3.png",
+    alt: "Hands lifting away from a finished silver-leafed Indian sweet",
+  },
+];
+
+const FRAME_DURATION_MS = 4500;
+const CROSSFADE_SECONDS = 1.6;
+
+/**
+ * A slow, looping crossfade across three AI-generated stills of hands
+ * decorating a sweet, each with its own gentle Ken Burns zoom — reads as
+ * ambient motion (a "cinemagraph") without requiring real video. Autoplay
+ * is gated on prefers-reduced-motion; reduced-motion users get a single
+ * static frame.
+ */
+function HeroCinemagraph() {
+  const [index, setIndex] = useState(0);
+  const [autoplay, setAutoplay] = useState(false);
+
+  useEffect(() => {
+    // One-time read of a browser-only media query; can't run during SSR render.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setAutoplay(window.matchMedia("(prefers-reduced-motion: no-preference)").matches);
+  }, []);
+
+  useEffect(() => {
+    if (!autoplay) return;
+    const id = window.setInterval(() => {
+      setIndex((i) => (i + 1) % HERO_FRAMES.length);
+    }, FRAME_DURATION_MS);
+    return () => window.clearInterval(id);
+  }, [autoplay]);
+
+  const frame = HERO_FRAMES[index];
+
+  return (
+    <div className="absolute inset-0 overflow-hidden">
+      <AnimatePresence>
+        <motion.div
+          key={frame.src}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: CROSSFADE_SECONDS, ease: [0.22, 1, 0.36, 1] }}
+          className="absolute inset-0"
+        >
+          <motion.div
+            initial={{ scale: 1 }}
+            animate={{ scale: 1.06 }}
+            transition={{ duration: FRAME_DURATION_MS / 1000 + CROSSFADE_SECONDS, ease: "linear" }}
+            className="absolute inset-0"
+          >
+            <Image
+              src={frame.src}
+              alt={frame.alt}
+              fill
+              priority={index === 0}
+              sizes="100vw"
+              className="object-cover"
+            />
+          </motion.div>
+        </motion.div>
+      </AnimatePresence>
+    </div>
+  );
+}
 
 /**
  * Full-bleed hero. Everything renders at full opacity immediately — the
@@ -41,14 +113,7 @@ export function SweetHero() {
           style={{ scale, y, rotateX, transformOrigin: "center top" }}
           className="absolute inset-0"
         >
-          <Image
-            src={HERO_IMAGE.src}
-            alt={HERO_IMAGE.alt}
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover"
-          />
+          <HeroCinemagraph />
         </motion.div>
       </div>
 
