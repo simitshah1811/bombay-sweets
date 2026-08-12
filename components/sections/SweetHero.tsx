@@ -63,15 +63,28 @@ function HeroMedia({ isDesktop }: { isDesktop: boolean }) {
     if (!isDesktop) return;
     const video = videoRef.current;
     if (!video) return;
+
+    let retried = false;
     const markReady = () => setVideoReady(true);
     video.addEventListener("playing", markReady);
-    // Fallback in case the browser blocks/delays autoplay -- the poster
-    // image underneath is already visible either way, so this only
-    // controls how long the video is given before we stop waiting on it.
-    const timer = window.setTimeout(markReady, 1200);
+
+    // The `autoPlay` attribute alone can silently fail (browser autoplay
+    // policy, power-saving mode, an extension). Only fade the video in
+    // once it has actually started playing -- if it never does, the
+    // poster image underneath just keeps showing, which is the correct
+    // fallback rather than revealing a frozen paused frame that looks
+    // identical to a static image.
+    const attemptPlay = () => {
+      video.play().catch(() => {
+        if (retried) return;
+        retried = true;
+        window.setTimeout(attemptPlay, 400);
+      });
+    };
+    attemptPlay();
+
     return () => {
       video.removeEventListener("playing", markReady);
-      window.clearTimeout(timer);
     };
   }, [isDesktop]);
 

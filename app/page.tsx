@@ -1,6 +1,5 @@
 import { SweetHero } from "@/components/sections/SweetHero";
 import { SweetCollection } from "@/components/sections/SweetCollection";
-import { SweetProductReveal } from "@/components/sections/SweetProductReveal";
 import { SweetIngredientStory } from "@/components/sections/SweetIngredientStory";
 import { SweetHandcraft } from "@/components/sections/SweetHandcraft";
 import { SweetFinalCTA } from "@/components/sections/SweetFinalCTA";
@@ -17,7 +16,6 @@ export default function Home() {
     <main>
       <SweetHero />
       <SweetCollection />
-      <SweetProductReveal />
       <SweetIngredientStory />
       <SweetHandcraft />
       <SweetFinalCTA />
