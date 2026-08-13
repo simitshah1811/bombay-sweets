@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { cn } from "@/lib/utils/cn";
 import { PillButton } from "@/components/ui/PillButton";
@@ -36,7 +37,10 @@ export function MobileNavSheet({
         )}
       >
         <div className="flex items-center justify-between">
-          <Wordmark />
+          <div className="flex items-center gap-2.5">
+            <Image src="/images/logo-mark.png" alt="" width={215} height={269} className="h-9 w-auto" />
+            <Wordmark />
+          </div>
           <button
             type="button"
             onClick={onClose}

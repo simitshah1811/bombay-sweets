@@ -5,6 +5,7 @@ import { SiteFooter } from "@/components/layout/SiteFooter";
 import { MotionProvider } from "@/components/motion/MotionProvider";
 import { CartProvider } from "@/lib/cart/CartContext";
 import { CartDrawer } from "@/components/cart/CartDrawer";
+import { Preloader } from "@/components/Preloader";
 import { business } from "@/data/business";
 import "./globals.css";
 
@@ -39,6 +40,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${fraunces.variable} ${lora.variable} ${inter.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-cream text-ink">
+        <Preloader />
         <CartProvider>
           <MotionProvider>
             <SiteHeader />

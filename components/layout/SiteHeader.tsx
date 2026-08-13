@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { cn } from "@/lib/utils/cn";
 import { PillButton } from "@/components/ui/PillButton";
@@ -28,7 +29,15 @@ export function SiteHeader() {
       )}
     >
       <div className="mx-auto flex max-w-[1600px] items-center justify-between gap-6 px-6 py-5 lg:px-10">
-        <Link href="/" className="shrink-0">
+        <Link href="/" className="flex shrink-0 items-center gap-2.5">
+          <Image
+            src="/images/logo-mark.png"
+            alt=""
+            width={215}
+            height={269}
+            priority
+            className="h-9 w-auto lg:h-11"
+          />
           <Wordmark />
         </Link>
 
