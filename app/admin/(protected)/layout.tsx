@@ -1,6 +1,7 @@
 import { fraunces, lora, inter } from "@/lib/fonts";
 import { requireAdminSession } from "@/lib/auth/guard";
 import { can } from "@/lib/auth/permissions";
+import { getRestaurantName } from "@/lib/business/queries";
 import { AdminNav } from "@/components/admin/AdminNav";
 
 // The admin shell is deliberately its own thing, not a themed variant of the
@@ -8,6 +9,7 @@ import { AdminNav } from "@/components/admin/AdminNav";
 // utility surface, not the customer site's header/footer/cart/preloader.
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const session = await requireAdminSession();
+  const restaurantName = await getRestaurantName();
 
   // Nav visibility is computed here (server-side, from the one permissions
   // source of truth) and passed down as plain booleans -- AdminNav itself
@@ -19,6 +21,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       <AdminNav
         role={session.role}
         name={`${session.firstName} ${session.lastName}`}
+        restaurantName={restaurantName}
         canManageMenu={can(session.role, "menu:manage")}
         canManageSettings={can(session.role, "settings:manage")}
       />

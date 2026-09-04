@@ -3,6 +3,7 @@ import { prisma } from "@/lib/db";
 import { getStripeClient } from "@/lib/stripe/client";
 import { toCents } from "@/lib/money";
 import { RESTAURANT_CURRENCY } from "@/lib/payments/currency";
+import { getRestaurantName } from "@/lib/business/queries";
 
 export type CreateCheckoutSessionResult =
   | { ok: true; url: string }
@@ -79,6 +80,7 @@ export async function getOrCreateCheckoutSession(
   }
 
   const totalCents = toCents(order.totalAmount);
+  const restaurantName = await getRestaurantName();
 
   try {
     const session = await stripe.checkout.sessions.create(
@@ -94,7 +96,7 @@ export async function getOrCreateCheckoutSession(
           {
             price_data: {
               currency: RESTAURANT_CURRENCY,
-              product_data: { name: `Bombay Sweets Order #${order.orderNumber}` },
+              product_data: { name: `${restaurantName} Order #${order.orderNumber}` },
               unit_amount: totalCents,
             },
             quantity: 1,

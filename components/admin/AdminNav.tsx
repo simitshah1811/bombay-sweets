@@ -15,11 +15,13 @@ const ROLE_LABEL: Record<AdminRole, string> = {
 export function AdminNav({
   role,
   name,
+  restaurantName,
   canManageMenu,
   canManageSettings,
 }: {
   role: AdminRole;
   name: string;
+  restaurantName: string;
   canManageMenu: boolean;
   canManageSettings: boolean;
 }) {
@@ -49,7 +51,7 @@ export function AdminNav({
       <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-4">
         <div className="flex items-center gap-8">
           <Link href="/admin" className="font-display text-lg font-semibold tracking-tight text-ink">
-            Bombay Sweets <span className="text-ink/50 font-body text-sm font-normal">Admin</span>
+            {restaurantName} <span className="text-ink/50 font-body text-sm font-normal">Admin</span>
           </Link>
           <nav className="flex items-center gap-1">
             {links.map((link) => {

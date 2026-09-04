@@ -16,3 +16,15 @@ export async function getPublicBusinessSettings(): Promise<PublicBusinessSetting
     taxRatePercent: settings ? Number(settings.taxRatePercent) : 0,
   };
 }
+
+/**
+ * The single source of truth for "what is this restaurant called" --
+ * anywhere in the app that would otherwise hardcode a restaurant name
+ * (admin login heading, Stripe line-item description, etc.) reads it from
+ * here instead, so cloning this project for a different restaurant is a
+ * database-row change, not a source-code one.
+ */
+export async function getRestaurantName(): Promise<string> {
+  const restaurant = await prisma.restaurant.findFirst();
+  return restaurant?.name ?? "Restaurant";
+}
