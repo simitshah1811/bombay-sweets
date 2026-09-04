@@ -1,11 +1,5 @@
 import type { Metadata } from "next";
 import { fraunces, lora, inter } from "@/lib/fonts";
-import { SiteHeader } from "@/components/layout/SiteHeader";
-import { SiteFooter } from "@/components/layout/SiteFooter";
-import { MotionProvider } from "@/components/motion/MotionProvider";
-import { CartProvider } from "@/lib/cart/CartContext";
-import { CartDrawer } from "@/components/cart/CartDrawer";
-import { Preloader } from "@/components/Preloader";
 import { business } from "@/data/business";
 import "./globals.css";
 
@@ -39,17 +33,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       data-scroll-behavior="smooth"
       className={`${fraunces.variable} ${lora.variable} ${inter.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-cream text-ink">
-        <Preloader />
-        <CartProvider>
-          <MotionProvider>
-            <SiteHeader />
-            <div className="flex-1">{children}</div>
-            <SiteFooter />
-            <CartDrawer />
-          </MotionProvider>
-        </CartProvider>
-      </body>
+      <body className="min-h-full flex flex-col bg-cream text-ink">{children}</body>
     </html>
   );
 }

@@ -31,7 +31,12 @@ export function ResultCard({ result }: { result: DiscoveryResult }) {
           <PillButton href={`/menu#${item.id}`} variant="ghost" className="px-4 py-2 text-sm">
             View on menu
           </PillButton>
-          <AddToCartButton itemId={item.id} className="px-4 py-2 text-sm" />
+          <AddToCartButton
+            itemId={item.id}
+            itemName={item.name}
+            price={item.price}
+            className="px-4 py-2 text-sm"
+          />
         </div>
       </div>
     </div>

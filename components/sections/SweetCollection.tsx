@@ -78,12 +78,14 @@ function splitNameAndWeight(fullName: string): { name: string; weight: string | 
 function EditorialAddToOrder({ itemId }: { itemId: string }) {
   const { add } = useCart();
   const [added, setAdded] = useState(false);
+  const item = getMenuItem(itemId);
 
   return (
     <button
       type="button"
       onClick={() => {
-        add(itemId, 1);
+        if (!item) return;
+        add({ itemId, itemName: item.name, unitPrice: item.price, modifiers: [], specialInstructions: "", quantity: 1 });
         setAdded(true);
         window.setTimeout(() => setAdded(false), 1200);
       }}

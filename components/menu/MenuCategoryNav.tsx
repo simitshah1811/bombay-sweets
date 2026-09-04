@@ -1,14 +1,17 @@
 import Link from "next/link";
-import { MENU_CATEGORIES } from "@/data/menu";
 
-export function MenuCategoryNav() {
+export function MenuCategoryNav({
+  categories,
+}: {
+  categories: { id: string; name: string }[];
+}) {
   return (
     <nav
       aria-label="Menu categories"
       className="sticky top-[85px] z-30 -mx-6 overflow-x-auto border-b border-ink/10 bg-cream/95 px-6 py-4 backdrop-blur-sm lg:-mx-10 lg:px-10"
     >
       <div className="flex w-max gap-2.5">
-        {MENU_CATEGORIES.map((category) => (
+        {categories.map((category) => (
           <Link
             key={category.id}
             href={`#${category.id}`}

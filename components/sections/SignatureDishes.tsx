@@ -52,7 +52,7 @@ export function SignatureDishes() {
                   <span className="font-body text-lg text-ink">{item.name}</span>
                   <span className="font-body text-sm text-ink/70">{formatPrice(item.price)}</span>
                 </div>
-                <AddToCartButton itemId={itemId} size="compact" />
+                <AddToCartButton itemId={itemId} itemName={item.name} price={item.price} size="compact" />
               </div>
             </Link>
           );

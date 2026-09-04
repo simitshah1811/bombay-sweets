@@ -1,0 +1,678 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+//
+// BOMBAY SWEETS — PICKUP ORDERING SYSTEM — DATABASE FOUNDATION (Phase 2)
+// Pickup only. No delivery models, fields, or enums exist anywhere in this file.
+// Money fields use Decimal(10,2) — never floating point — for exact currency math.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ---------------------------------------------------------------------------
+// BUSINESS
+// ---------------------------------------------------------------------------
+
+model Restaurant {
+  id        String  @id @default(cuid())
+  name      String
+  legalName String
+  tagline   String?
+
+  street      String
+  city        String
+  region      String
+  postalCode  String
+  country     String
+  addressLine String
+
+  phone     String
+  phoneHref String
+  fax       String?
+  email     String
+  mapsHref  String?
+
+  // IANA timezone identifier (e.g. "America/Los_Angeles") -- the single
+  // authoritative timezone for all pickup scheduling. Never a fixed UTC
+  // offset, so daylight-saving transitions are handled correctly.
+  timezone String @default("America/Los_Angeles")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  settings      BusinessSettings?
+  businessHours BusinessHours[]
+  specialHours  SpecialHours[]
+}
+
+model BusinessSettings {
+  id           String     @id @default(cuid())
+  restaurantId String     @unique
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id])
+
+  // Demo-valued operational config. All of this becomes admin-editable in
+  // Phase 7 (menu/settings dashboard) -- nothing here is final client data.
+  orderingEnabled           Boolean @default(true)
+  pickupEnabled             Boolean @default(true)
+  asapPickupEnabled         Boolean @default(true)
+  scheduledPickupEnabled    Boolean @default(true)
+  minPrepTimeMinutes        Int     @default(20)
+  pickupIntervalMinutes     Int     @default(15)
+  maxAdvanceSchedulingHours Int     @default(48)
+  taxRatePercent            Decimal @default(12.00) @db.Decimal(5, 2)
+
+  isDemoMode Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum DayOfWeek {
+  SUNDAY
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+}
+
+model BusinessHours {
+  id           String     @id @default(cuid())
+  restaurantId String
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id])
+
+  dayOfWeek DayOfWeek
+  openTime  String // 24h "HH:mm", e.g. "10:00"
+  closeTime String // 24h "HH:mm", e.g. "20:00"
+  isClosed  Boolean   @default(false)
+
+  @@unique([restaurantId, dayOfWeek])
+}
+
+model SpecialHours {
+  id           String     @id @default(cuid())
+  restaurantId String
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id])
+
+  date      DateTime @db.Date
+  openTime  String?
+  closeTime String?
+  isClosed  Boolean  @default(false)
+  note      String?
+
+  createdAt DateTime @default(now())
+
+  @@unique([restaurantId, date])
+}
+
+// ---------------------------------------------------------------------------
+// MENU
+// ---------------------------------------------------------------------------
+
+// Phase 11: how long a dish typically takes the kitchen to prepare, shown to
+// customers as a small colored indicator. Independent of price/availability
+// -- purely a live display attribute the owner can change throughout the
+// day (busy lunch rush vs. quiet afternoon) without touching the item
+// itself. Never persisted onto an OrderItem snapshot; always read live.
+enum PreparationStatus {
+  GREEN
+  YELLOW
+  RED
+}
+
+model MenuCategory {
+  // Reuses the existing kebab-case ids from data/menu.ts (e.g. "appetizers")
+  // so Phase 3 can point the frontend at the database without renaming anything.
+  id           String  @id
+  name         String
+  displayOrder Int
+  isActive     Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  items MenuItem[]
+
+  @@index([displayOrder])
+}
+
+model MenuItem {
+  // Reuses the existing kebab-case ids from data/menu.ts (e.g. "vegetable-samosa").
+  id         String       @id
+  categoryId String
+  category   MenuCategory @relation(fields: [categoryId], references: [id])
+
+  name        String
+  description String?
+  price       Decimal @db.Decimal(10, 2)
+  imageUrl    String?
+
+  isVegetarian Boolean @default(false)
+  spiceLevel   Int? // 0-3, null = not applicable (e.g. beverages)
+
+  isAvailable  Boolean @default(true)
+  isArchived   Boolean @default(false)
+  displayOrder Int     @default(0)
+
+  // Phase 11: customer-facing prep-time indicator. GREEN/no minutes is the
+  // safe default for every item that existed before this feature -- it
+  // reads as "quick preparation" until the owner sets something more
+  // specific. preparationMinutes is optional -- when unset, the UI falls
+  // back to a status-only label (e.g. "Moderate wait") instead of a number.
+  preparationStatus  PreparationStatus @default(GREEN)
+  preparationMinutes Int?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  modifierGroups MenuItemModifierGroup[]
+  orderItems     OrderItem[]
+
+  @@index([categoryId])
+  @@index([isAvailable])
+}
+
+model ModifierGroup {
+  id           String  @id @default(cuid())
+  name         String // e.g. "Naan Type"
+  isRequired   Boolean @default(false)
+  minSelect    Int     @default(0)
+  maxSelect    Int     @default(1)
+  displayOrder Int     @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  options   ModifierOption[]
+  menuItems MenuItemModifierGroup[]
+}
+
+model ModifierOption {
+  id              String        @id @default(cuid())
+  modifierGroupId String
+  modifierGroup   ModifierGroup @relation(fields: [modifierGroupId], references: [id])
+
+  name            String // e.g. "Garlic Naan"
+  priceAdjustment Decimal @default(0) @db.Decimal(10, 2)
+  isAvailable     Boolean @default(true)
+  displayOrder    Int     @default(0)
+
+  orderItemModifiers OrderItemModifier[]
+
+  @@index([modifierGroupId])
+}
+
+// Join table: lets one ModifierGroup (e.g. "Naan Type") be reused across many
+// MenuItems instead of being duplicated per dish.
+model MenuItemModifierGroup {
+  id              String        @id @default(cuid())
+  menuItemId      String
+  menuItem        MenuItem      @relation(fields: [menuItemId], references: [id])
+  modifierGroupId String
+  modifierGroup   ModifierGroup @relation(fields: [modifierGroupId], references: [id])
+  displayOrder    Int           @default(0)
+
+  @@unique([menuItemId, modifierGroupId])
+}
+
+// ---------------------------------------------------------------------------
+// CUSTOMERS
+// ---------------------------------------------------------------------------
+
+// Pickup only -- deliberately no address fields of any kind.
+model Customer {
+  id        String @id @default(cuid())
+  firstName String
+  lastName  String
+  email     String @unique
+  phone     String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  orders Order[]
+}
+
+// ---------------------------------------------------------------------------
+// ORDERS
+// ---------------------------------------------------------------------------
+
+enum PickupType {
+  ASAP
+  SCHEDULED
+}
+
+enum OrderStatus {
+  PENDING_PAYMENT
+  PAID
+  ACCEPTED
+  PREPARING
+  READY
+  COMPLETED
+  CANCELLED
+  REJECTED
+  REFUNDED
+}
+
+// Who/what performed a status transition. STRIPE/WEBHOOK is reserved for the
+// future verified Stripe webhook (Phase 8); CUSTOMER is reserved for a
+// future customer-initiated action (e.g. self-cancel). Neither has a caller
+// in Phase 6 -- the engine enforces which actors may perform which
+// transitions regardless of what a caller claims.
+enum OrderActor {
+  CUSTOMER
+  ADMIN
+  STAFF
+  SYSTEM
+  STRIPE
+  WEBHOOK
+}
+
+model Order {
+  id             String  @id @default(cuid())
+  orderNumber    String  @unique // e.g. "BS-260817-4821"
+  // Client-generated per-checkout-attempt key. Lets a double-click, refresh,
+  // or network retry safely resolve to the same order instead of creating a
+  // duplicate -- the same mechanism Phase 8 will reuse for Stripe idempotency.
+  idempotencyKey String? @unique
+
+  // Linked for convenience/reporting, but never the source of truth for what
+  // was actually collected at checkout -- see the snapshot fields below.
+  customerId        String?
+  customer          Customer? @relation(fields: [customerId], references: [id])
+  customerFirstName String
+  customerLastName  String
+  customerEmail     String
+  customerPhone     String
+
+  pickupType          PickupType
+  requestedPickupTime DateTime? // set for SCHEDULED; null means ASAP
+  specialInstructions String?
+
+  subtotal       Decimal @db.Decimal(10, 2)
+  taxAmount      Decimal @db.Decimal(10, 2)
+  discountAmount Decimal @default(0) @db.Decimal(10, 2)
+  // Not exposed anywhere in the customer or admin experience -- there is no
+  // tipping functionality in this system. Kept at 0 rather than dropped by a
+  // purely cosmetic migration; safe to remove later if it's still unused.
+  tipAmount      Decimal @default(0) @db.Decimal(10, 2)
+  totalAmount    Decimal @db.Decimal(10, 2)
+
+  // Snapshot of the promotion actually applied, if any -- preserved exactly
+  // as it was at order time so a later change to the Promotion's rules can
+  // never alter what a past order shows it received.
+  promotionCode          String?
+  promotionDiscountType  DiscountType?
+  promotionDiscountValue Decimal?      @db.Decimal(10, 2)
+
+  status      OrderStatus @default(PENDING_PAYMENT)
+  isDemoOrder Boolean     @default(true)
+
+  // Phase 9 customer tracking. The SHA-256 hash is the ONLY thing the
+  // tracking page's own access check ever reads (lib/orders/getOrderForTracking.ts,
+  // unchanged) -- a customer proves they hold the right token by having
+  // its hash match this column, exactly as before.
+  trackingTokenHash String? @unique
+  // Phase 10 addition: the plaintext token, ALSO stored. This exists for
+  // exactly one reason -- lib/notifications/service.ts needs to build a
+  // working tracking link autonomously (e.g. days later, when staff mark
+  // an order READY), with no customer request in progress to relay a
+  // token through. A one-way hash can't be reversed for that. This is a
+  // deliberate, disclosed tradeoff: it does NOT change the tracking page's
+  // own security property (still exclusively hash-based, still
+  // timing-safe), it only makes the token additionally recoverable by
+  // server-side code that already has full database access. Never used
+  // for any access-control decision -- only ever read to build a link.
+  // Phase 10.1: AES-256-GCM-encrypted copy of the token (replaces the
+  // Phase 10 plaintext trackingToken column, now removed). This exists for
+  // exactly one reason -- lib/notifications/service.ts needs to build a
+  // working tracking link autonomously (e.g. days later, when staff mark
+  // an order READY), with no customer request in progress to relay a
+  // token through. A one-way hash can't be reversed for that, so this is
+  // recoverable by design -- but only via lib/orders/trackingTokenCipher.ts,
+  // using a server-only key (TRACKING_TOKEN_ENCRYPTION_KEY) never exposed
+  // to the browser. This is NOT an authentication mechanism and is never
+  // used for any access-control decision -- trackingTokenHash above remains
+  // the sole thing the tracking page's own access check compares against.
+  encryptedTrackingToken String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  items               OrderItem[]
+  statusHistory       OrderStatusHistory[]
+  promotionRedemption PromotionRedemption?
+  payment             Payment?
+  notifications       Notification[]
+
+  @@index([status])
+  @@index([customerEmail])
+  @@index([createdAt])
+}
+
+// Price-snapshot requirement: itemName/unitPrice are copied at order time and
+// never change again, even if the linked MenuItem's name/price changes later.
+model OrderItem {
+  id      String @id @default(cuid())
+  orderId String
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  // Kept for reporting/analytics only -- nullable because the menu item could
+  // later be archived or deleted without invalidating historical orders.
+  menuItemId String?
+  menuItem   MenuItem? @relation(fields: [menuItemId], references: [id])
+
+  itemName            String // snapshot
+  unitPrice           Decimal @db.Decimal(10, 2) // snapshot
+  quantity            Int
+  lineTotal           Decimal @db.Decimal(10, 2)
+  specialInstructions String?
+
+  modifiers OrderItemModifier[]
+
+  @@index([orderId])
+}
+
+// Same snapshot principle one level down: which modifier, and what it cost,
+// at the moment this order was placed.
+model OrderItemModifier {
+  id          String    @id @default(cuid())
+  orderItemId String
+  orderItem   OrderItem @relation(fields: [orderItemId], references: [id], onDelete: Cascade)
+
+  modifierOptionId String?
+  modifierOption   ModifierOption? @relation(fields: [modifierOptionId], references: [id])
+
+  modifierGroupName String // snapshot, e.g. "Naan Type"
+  modifierName      String // snapshot, e.g. "Garlic Naan"
+  priceAdjustment   Decimal @db.Decimal(10, 2) // snapshot
+
+  @@index([orderItemId])
+}
+
+// Permanent, append-only audit trail -- rows are never edited or deleted.
+// One row is created per successful transition, inside the same database
+// transaction as the Order.status update (see lib/orders/orderLifecycle.ts).
+model OrderStatusHistory {
+  id      String @id @default(cuid())
+  orderId String
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  previousStatus OrderStatus? // null only for the initial PENDING_PAYMENT row created at checkout
+  status         OrderStatus
+  actor          OrderActor   @default(SYSTEM)
+  note           String? // the transition's "reason", where applicable
+
+  // Who, specifically, performed this transition when the actor is a human
+  // staff member (ADMIN/STAFF actor). Null for SYSTEM/STRIPE/WEBHOOK, which
+  // aren't tied to a person. actorRole snapshots their role AT THE TIME --
+  // same snapshot principle as the rest of this schema, so a later role
+  // change (or account removal) never rewrites what history already shows.
+  adminUserId String?
+  adminUser   AdminUser? @relation(fields: [adminUserId], references: [id])
+  actorRole   String?
+
+  createdAt DateTime @default(now())
+
+  @@index([orderId])
+}
+
+// ---------------------------------------------------------------------------
+// PAYMENTS
+// Payment is the authoritative, detailed payment record; Order.status.PAID
+// remains a fast fulfillment-gate flag set only via the lifecycle engine
+// once a webhook confirms this Payment succeeded (see lib/payments/ and
+// app/api/stripe/webhook).
+// ---------------------------------------------------------------------------
+
+enum PaymentStatus {
+  PENDING
+  SUCCEEDED
+  FAILED
+  REFUNDED
+  PARTIALLY_REFUNDED
+}
+
+model Payment {
+  id      String @id @default(cuid())
+  orderId String @unique
+  order   Order  @relation(fields: [orderId], references: [id])
+
+  provider                String        @default("stripe")
+  stripeCheckoutSessionId String?       @unique
+  stripePaymentIntentId   String?       @unique
+  amount                  Decimal       @db.Decimal(10, 2)
+  currency                String        @default("cad")
+  status                  PaymentStatus @default(PENDING)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  refunds Refund[]
+}
+
+model Refund {
+  id             String  @id @default(cuid())
+  paymentId      String
+  payment        Payment @relation(fields: [paymentId], references: [id])
+  stripeRefundId String? @unique
+  amount         Decimal @db.Decimal(10, 2)
+  reason         String?
+
+  createdAt DateTime @default(now())
+}
+
+// Idempotency + audit trail for incoming Stripe webhook events. Stripe can
+// (and does) retry webhook delivery, so the mere presence of a row here for
+// a given stripeEventId means that event was already fully processed --
+// checked before doing any work, written only after the work succeeds. This
+// is a fast-path/audit layer on top of correctness that already holds
+// without it: Payment upserts and transitionOrder() are independently
+// idempotent, so even a race here can't double-charge or double-transition.
+model WebhookEvent {
+  id            String   @id @default(cuid())
+  stripeEventId String   @unique
+  type          String
+  processedAt   DateTime @default(now())
+
+  @@index([type])
+}
+
+// Phase 9: server-side, serverless-safe rate limiting for Stripe Checkout
+// Session creation. A fixed-window counter keyed on (key, windowStart) --
+// Postgres's own unique-constraint + upsert atomicity makes concurrent
+// increments from different serverless function instances race-safe
+// without any in-memory state, which is why this (rather than a plain
+// in-process counter) is the right approach for a Vercel deployment.
+// Stale rows are swept by the same daily cron that expires abandoned
+// orders (see app/api/cron/expire-abandoned-orders).
+model RateLimitBucket {
+  id          String   @id @default(cuid())
+  key         String
+  windowStart DateTime
+  count       Int      @default(1)
+  createdAt   DateTime @default(now())
+
+  @@unique([key, windowStart])
+  @@index([windowStart])
+}
+
+// ---------------------------------------------------------------------------
+// NOTIFICATIONS (Phase 10)
+// Every customer notification the system has ever attempted, one row per
+// (order, event, channel). The @@unique constraint below IS the
+// idempotency mechanism -- a webhook retry, an admin double-click, or a
+// concurrent request racing to notify for the same event all attempt to
+// INSERT the same row; only the first ever succeeds, everyone else hits a
+// unique-constraint violation and is treated as "already handled."
+// ---------------------------------------------------------------------------
+
+enum NotificationEventType {
+  ORDER_CREATED
+  PAYMENT_SUCCEEDED
+  ORDER_ACCEPTED
+  ORDER_PREPARING
+  ORDER_READY
+  ORDER_CANCELLED
+  ORDER_REJECTED
+}
+
+// Only EMAIL exists this phase -- the enum (rather than a bare string)
+// exists so SMS/push can be added later without a data migration, per the
+// explicit "keep the engine extensible" requirement.
+enum NotificationChannel {
+  EMAIL
+}
+
+enum NotificationStatus {
+  PENDING
+  SENDING
+  SENT
+  FAILED
+  // The event genuinely fired (a real DB transition happened) but the
+  // environment gate (NOTIFICATIONS_ENABLED / missing test recipient)
+  // decided not to actually dispatch anything -- distinct from FAILED
+  // (a real send attempt that didn't work) so it's never mistaken for a
+  // provider problem or picked up by the retry sweep.
+  SKIPPED
+}
+
+model Notification {
+  id      String @id @default(cuid())
+  orderId String
+  order   Order  @relation(fields: [orderId], references: [id])
+
+  eventType NotificationEventType
+  channel   NotificationChannel   @default(EMAIL)
+  status    NotificationStatus    @default(PENDING)
+
+  // Snapshot of where this was actually sent -- may be the customer's real
+  // email, or the configured NOTIFICATION_TEST_EMAIL if a non-production
+  // environment redirected it. Never re-derived from the order later.
+  recipientEmail String
+
+  providerMessageId String?
+  attempts          Int     @default(0)
+  lastError         String?
+
+  createdAt DateTime  @default(now())
+  sentAt    DateTime?
+
+  @@unique([orderId, eventType, channel])
+  @@index([status])
+  @@index([orderId])
+}
+
+// ---------------------------------------------------------------------------
+// PROMOTIONS
+// Configurable discount codes. The one seeded row (WELCOME10) is clearly
+// marked isDemoPromotion -- not a real, client-approved Bombay Sweets offer.
+// ---------------------------------------------------------------------------
+
+enum DiscountType {
+  PERCENTAGE
+  FIXED_AMOUNT
+}
+
+model Promotion {
+  id          String  @id @default(cuid())
+  code        String  @unique // stored uppercase; matched case-insensitively
+  description String?
+
+  discountType  DiscountType
+  discountValue Decimal      @db.Decimal(10, 2) // percent (e.g. 10.00) or dollar amount (e.g. 5.00)
+
+  minOrderAmount    Decimal? @db.Decimal(10, 2)
+  maxDiscountAmount Decimal? @db.Decimal(10, 2) // caps a percentage discount; ignored for fixed-amount
+
+  usageLimit       Int? // total redemptions allowed across all customers
+  perCustomerLimit Int? // redemptions allowed per customer email
+
+  startsAt DateTime?
+  endsAt   DateTime?
+  isActive Boolean   @default(true)
+
+  isDemoPromotion Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  redemptions PromotionRedemption[]
+
+  @@index([code])
+}
+
+// A promotion is only recorded here once an order is actually created --
+// entering a code alone never counts as a redemption.
+model PromotionRedemption {
+  id          String    @id @default(cuid())
+  promotionId String
+  promotion   Promotion @relation(fields: [promotionId], references: [id])
+
+  orderId String @unique
+  order   Order  @relation(fields: [orderId], references: [id])
+
+  customerEmail  String // snapshot, used for per-customer limit checks
+  discountAmount Decimal @db.Decimal(10, 2) // snapshot of what was actually applied
+
+  createdAt DateTime @default(now())
+
+  @@index([promotionId])
+  @@index([customerEmail])
+}
+
+// ---------------------------------------------------------------------------
+// ADMINISTRATION
+// Restaurant staff accounts (Phase 7). Customers never have an account here
+// -- this is exclusively for internal admin/dashboard access.
+// ---------------------------------------------------------------------------
+
+enum AdminRole {
+  OWNER
+  MANAGER
+  STAFF
+}
+
+model AdminUser {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  passwordHash String
+  firstName    String
+  lastName     String
+  role         AdminRole
+  isActive     Boolean   @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  orderStatusChanges OrderStatusHistory[]
+  activityLogs       AdminActivityLog[]
+
+  @@index([email])
+}
+
+// Lightweight audit trail for admin actions that aren't order-status
+// transitions (those already have OrderStatusHistory -- this isn't a
+// duplicate of it). Covers logins, menu/category/modifier changes, and
+// business-settings changes.
+model AdminActivityLog {
+  id          String     @id @default(cuid())
+  adminUserId String?
+  adminUser   AdminUser? @relation(fields: [adminUserId], references: [id])
+
+  action     String // e.g. "LOGIN", "MENU_ITEM_UPDATED", "CATEGORY_CREATED", "SETTINGS_UPDATED"
+  targetType String? // e.g. "MenuItem", "MenuCategory", "BusinessSettings"
+  targetId   String?
+  note       String? // human-readable summary, e.g. "Changed price of Butter Chicken from $17.50 to $18.50"
+
+  createdAt DateTime @default(now())
+
+  @@index([adminUserId])
+  @@index([createdAt])
+}
