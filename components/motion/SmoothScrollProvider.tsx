@@ -7,6 +7,15 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
+// Mobile browsers resize the viewport (the address bar collapsing/expanding
+// as the page scrolls) far more often than desktop does. Without this,
+// every one of those resizes makes ScrollTrigger recalculate its pinned
+// sections' start/end points mid-scroll -- on a phone that shows up as the
+// pinned scroll-driven sections (SweetHandcraft, SweetIngredientStory)
+// simply not animating, or animating once and then freezing. This is
+// GSAP's own documented fix for exactly that symptom.
+ScrollTrigger.config({ ignoreMobileResize: true });
+
 export function SmoothScrollProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
