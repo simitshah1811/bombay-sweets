@@ -51,10 +51,8 @@ export function CartDrawer() {
         )}
       />
       <div
-        className={cn(
-          "absolute right-0 top-0 flex h-full w-[92%] max-w-md flex-col bg-cream shadow-[0_0_40px_rgba(0,0,0,0.12)] transition-transform duration-300 ease-out",
-          isOpen ? "translate-x-0" : "translate-x-full"
-        )}
+        className="absolute right-0 top-0 flex h-full w-[92%] max-w-md flex-col bg-cream shadow-[0_0_40px_rgba(0,0,0,0.12)] transition-transform duration-300 ease-out"
+        style={{ transform: isOpen ? "translateX(0)" : "translateX(100%)" }}
       >
         <div className="flex items-center justify-between border-b border-ink/10 px-6 py-6">
           <h2 className="font-display text-2xl text-ink">Your order</h2>

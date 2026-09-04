@@ -31,10 +31,8 @@ export function MobileNavSheet({
         )}
       />
       <div
-        className={cn(
-          "absolute right-0 top-0 flex h-full w-[82%] max-w-sm flex-col gap-8 bg-cream px-8 py-8 shadow-[0_0_40px_rgba(0,0,0,0.12)] transition-transform duration-300 ease-out",
-          open ? "translate-x-0" : "translate-x-full"
-        )}
+        className="absolute right-0 top-0 flex h-full w-[82%] max-w-sm flex-col gap-8 bg-cream px-8 py-8 shadow-[0_0_40px_rgba(0,0,0,0.12)] transition-transform duration-300 ease-out"
+        style={{ transform: open ? "translateX(0)" : "translateX(100%)" }}
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
