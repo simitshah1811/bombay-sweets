@@ -49,11 +49,11 @@ export function AdminNav({
   return (
     <header className="border-b border-ink/15 bg-cream">
       <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-4">
-        <div className="flex items-center gap-8">
+        <div className="flex flex-wrap items-center gap-4 md:gap-8">
           <Link href="/admin" className="font-display text-lg font-semibold tracking-tight text-ink">
             {restaurantName} <span className="text-ink/50 font-body text-sm font-normal">Admin</span>
           </Link>
-          <nav className="flex items-center gap-1">
+          <nav className="flex flex-wrap items-center gap-1">
             {links.map((link) => {
               const active = link.href === "/admin" ? pathname === "/admin" : pathname.startsWith(link.href);
               return (
