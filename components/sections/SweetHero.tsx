@@ -20,8 +20,6 @@ const HERO_VIDEO_SRC = "/videos/hero-kaju-katli.mp4";
 // cropping toward that point so the subject survives any viewport ratio.
 const MEDIA_OBJECT_POSITION = "68% center";
 
-const DESKTOP_QUERY = "(min-width: 1024px)";
-
 // Plain CSS transitions rather than a JS animation loop: a single mount
 // effect flips `entered`, and the browser's own compositor handles each
 // item's fade/rise on its staggered `delay-[…]`. Simpler and more robust
@@ -55,12 +53,11 @@ function EntranceItem({
   );
 }
 
-function HeroMedia({ isDesktop }: { isDesktop: boolean }) {
+function HeroMedia() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [videoReady, setVideoReady] = useState(false);
 
   useEffect(() => {
-    if (!isDesktop) return;
     const video = videoRef.current;
     if (!video) return;
 
@@ -86,19 +83,15 @@ function HeroMedia({ isDesktop }: { isDesktop: boolean }) {
     return () => {
       video.removeEventListener("playing", markReady);
     };
-  }, [isDesktop]);
+  }, []);
 
   return (
     <>
       <motion.div
         className="absolute inset-0"
         initial={{ scale: 1 }}
-        animate={isDesktop ? { scale: 1 } : { scale: 1.05 }}
-        transition={
-          isDesktop
-            ? { duration: 0 }
-            : { duration: 10, repeat: Infinity, repeatType: "reverse", ease: "easeInOut" }
-        }
+        animate={{ scale: 1.05 }}
+        transition={{ duration: 10, repeat: Infinity, repeatType: "reverse", ease: "easeInOut" }}
       >
         <Image
           src={HERO_IMAGE.src}
@@ -110,24 +103,22 @@ function HeroMedia({ isDesktop }: { isDesktop: boolean }) {
           className="object-cover"
         />
       </motion.div>
-      {isDesktop && (
-        <motion.video
-          ref={videoRef}
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="auto"
-          poster={HERO_IMAGE.src}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: videoReady ? 1 : 0 }}
-          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          style={{ objectPosition: MEDIA_OBJECT_POSITION }}
-          className="absolute inset-0 h-full w-full object-cover"
-        >
-          <source src={HERO_VIDEO_SRC} type="video/mp4" />
-        </motion.video>
-      )}
+      <motion.video
+        ref={videoRef}
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="auto"
+        poster={HERO_IMAGE.src}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: videoReady ? 1 : 0 }}
+        transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+        style={{ objectPosition: MEDIA_OBJECT_POSITION }}
+        className="absolute inset-0 h-full w-full object-cover"
+      >
+        <source src={HERO_VIDEO_SRC} type="video/mp4" />
+      </motion.video>
     </>
   );
 }
@@ -148,20 +139,16 @@ function ScrollIndicator() {
 }
 
 /**
- * Cinematic hero: the supplied Kaju Katli video (desktop, lg+) or still
- * image (mobile/tablet) is the visual protagonist, with a left-weighted
- * text column and a slow, restrained scroll-linked exit. No pinning --
- * native scroll stays intact throughout.
+ * Cinematic hero: the Kaju Katli video is the visual protagonist on every
+ * viewport (muted/playsInline/autoplay works fine on mobile Safari and
+ * Chrome), with a left-weighted text column and a slow, restrained
+ * scroll-linked exit. No pinning -- native scroll stays intact throughout.
  */
 export function SweetHero() {
   const sectionRef = useRef<HTMLElement>(null);
-  const [isDesktop, setIsDesktop] = useState(false);
   const [entered, setEntered] = useState(false);
 
   useEffect(() => {
-    // One-time read of a browser-only media query; can't run during SSR render.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setIsDesktop(window.matchMedia(DESKTOP_QUERY).matches);
     // Kick off the entrance sequence once mounted.
     setEntered(true);
   }, []);
@@ -178,7 +165,7 @@ export function SweetHero() {
   return (
     <section ref={sectionRef} className="relative h-screen w-full overflow-hidden bg-ink">
       <motion.div style={{ scale: mediaScale }} className="absolute inset-0">
-        <HeroMedia isDesktop={isDesktop} />
+        <HeroMedia />
       </motion.div>
 
       <div className="absolute inset-0 bg-gradient-to-r from-ink/60 via-ink/15 to-transparent" />

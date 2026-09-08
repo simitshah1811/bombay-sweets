@@ -3,6 +3,7 @@ import { SiteFooter } from "@/components/layout/SiteFooter";
 import { MotionProvider } from "@/components/motion/MotionProvider";
 import { CartProvider } from "@/lib/cart/CartContext";
 import { CartDrawer } from "@/components/cart/CartDrawer";
+import { MobileCartBar } from "@/components/cart/MobileCartBar";
 import { Preloader } from "@/components/Preloader";
 
 export default function SiteLayout({ children }: { children: React.ReactNode }) {
@@ -15,6 +16,7 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
           <div className="flex-1">{children}</div>
           <SiteFooter />
           <CartDrawer />
+          <MobileCartBar />
         </MotionProvider>
       </CartProvider>
     </>
