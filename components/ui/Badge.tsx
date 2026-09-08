@@ -7,12 +7,27 @@ const dotTone = {
   nonveg: "bg-maroon",
 } as const;
 
+const dotBorder = {
+  veg: "border-green",
+  nonveg: "border-maroon",
+} as const;
+
+// A square outline with a filled center dot -- the standard veg/non-veg
+// symbol used on Indian menus. Deliberately square (not round) so it can't
+// be mistaken for the round prep-time dot in PrepBadge below, which sits
+// just underneath it on the same menu row.
 export function DietDot({ tone, className }: { tone: keyof typeof dotTone; className?: string }) {
   return (
     <span
-      className={cn("inline-block h-2 w-2 rounded-full border border-ink/40", dotTone[tone], className)}
+      className={cn(
+        "inline-flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-[3px] border-[1.5px]",
+        dotBorder[tone],
+        className
+      )}
       aria-hidden
-    />
+    >
+      <span className={cn("h-1.5 w-1.5 rounded-full", dotTone[tone])} />
+    </span>
   );
 }
 
